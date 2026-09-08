@@ -282,8 +282,8 @@
             white-space: nowrap;
             z-index: 5;
             backdrop-filter: blur(12px);
-            opacity: 0;
-            transform: translateY(8px);
+            opacity: 1;
+            transform: translateY(0);
             transition: all .5s cubic-bezier(.25, .46, .45, .94);
         }
 
@@ -340,28 +340,11 @@
             background: linear-gradient(90deg, transparent, var(--border));
         }
 
-        /* 滚动动画 */
+        /* 滚动动画修复 - 默认可见 */
         .rv {
-            opacity: 0;
-            transform: translateY(36px);
+            opacity: 1 !important;
+            transform: none !important;
             transition: opacity .65s ease, transform .65s cubic-bezier(.25, .46, .45, .94);
-        }
-
-        .rv.fl {
-            transform: translateX(-36px) translateY(0);
-        }
-
-        .rv.fr {
-            transform: translateX(36px) translateY(0);
-        }
-
-        .rv.fs {
-            transform: scale(.93);
-        }
-
-        .rv.on {
-            opacity: 1;
-            transform: translate(0) scale(1);
         }
 
         .d1 {
@@ -1129,7 +1112,8 @@
                     <div class="hidden lg:block sc"></div>
                     <div
                         class="w-14 h-14 rounded-2xl bg-accent-dim border border-accent/20 flex items-center justify-center mx-auto mb-4">
-                        <span class="font-display font-bold text-accent text-lg">1</span></div>
+                        <span class="font-display font-bold text-accent text-lg">1</span>
+                    </div>
                     <h3 class="font-display font-semibold text-white mb-2">Create Workspace</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Sign up, name your workspace, and you're in. No
                         configuration wizard nightmare.</p>
@@ -1138,7 +1122,8 @@
                     <div class="hidden lg:block sc"></div>
                     <div
                         class="w-14 h-14 rounded-2xl bg-accent-dim border border-accent/20 flex items-center justify-center mx-auto mb-4">
-                        <span class="font-display font-bold text-accent text-lg">2</span></div>
+                        <span class="font-display font-bold text-accent text-lg">2</span>
+                    </div>
                     <h3 class="font-display font-semibold text-white mb-2">Invite Your Team</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Add members, assign roles. Everyone sees only what
                         they need to see.</p>
@@ -1147,7 +1132,8 @@
                     <div class="hidden lg:block sc"></div>
                     <div
                         class="w-14 h-14 rounded-2xl bg-accent-dim border border-accent/20 flex items-center justify-center mx-auto mb-4">
-                        <span class="font-display font-bold text-accent text-lg">3</span></div>
+                        <span class="font-display font-bold text-accent text-lg">3</span>
+                    </div>
                     <h3 class="font-display font-semibold text-white mb-2">Manage Everything</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Tasks, deals, clients, invoices — all from one
                         dashboard. Kanban, list, or calendar view.</p>
@@ -1155,7 +1141,8 @@
                 <div class="rv d4 text-center">
                     <div
                         class="w-14 h-14 rounded-2xl bg-accent-dim border border-accent/20 flex items-center justify-center mx-auto mb-4">
-                        <span class="font-display font-bold text-accent text-lg">4</span></div>
+                        <span class="font-display font-bold text-accent text-lg">4</span>
+                    </div>
                     <h3 class="font-display font-semibold text-white mb-2">Track and Grow</h3>
                     <p class="text-sm text-gray-500 leading-relaxed">Real-time dashboards show you exactly where things
                         stand. No guessing.</p>
