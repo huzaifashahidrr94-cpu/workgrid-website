@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features — WorkGrid</title>
+    <meta name="description" content="Deep dive into WorkGrid's features: Kanban boards, deal pipeline, invoicing, HR portal, role-based access, and real-time analytics.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { display:['Space Grotesk','sans-serif'], body:['DM Sans','sans-serif'] },
+                    colors: {
+                        dark:{950:'#05060A',900:'#08090D',800:'#0E1017',700:'#12141C',600:'#1A1D28',500:'#222532',400:'#2A2D3A',300:'#3A3E50'},
+                        accent:{DEFAULT:'#00E68A',dim:'rgba(0,230,138,0.08)',mid:'rgba(0,230,138,0.2)',glow:'rgba(0,230,138,0.35)'},
+                        warm:{DEFAULT:'#FF7849',dim:'rgba(255,120,73,0.1)'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root{--accent:#00E68A;--warm:#FF7849;--bg:#08090D;--card:#1A1D28;--border:#2A2D3A;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E4E4E9;overflow-x:hidden;}
+        h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0E1017;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:3px;}
+        .wg-logo{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;width:28px;height:28px;}
+        .wg-logo span{border-radius:3px;transition:background .3s;}
+        .wg-logo .on{background:var(--accent);}.wg-logo .off{background:rgba(255,255,255,0.08);}.wg-logo .warm{background:var(--warm);}
+        .dot-grid{background-image:radial-gradient(circle,#1E2130 1px,transparent 1px);background-size:30px 30px;}
+        .glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+        .gt{background:linear-gradient(135deg,#00E68A 0%,#00B8D4 50%,#00E68A 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .nav-scrolled{background:rgba(8,9,13,0.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid rgba(42,45,58,0.5)!important;}
+
+        /* 滚动动画 */
+        .rv{opacity:0;transform:translateY(36px);transition:opacity .65s ease,transform .65s cubic-bezier(.25,.46,.45,.94);}
+        .rv.fl{transform:translateX(-36px) translateY(0);}
+        .rv.fr{transform:translateX(36px) translateY(0);}
+        .rv.fs{transform:scale(.93);}
+        .rv.on{opacity:1;transform:translate(0) scale(1);}
+        .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}
+
+        /* 侧边粘性导航 */
+        .side-nav{position:sticky;top:80px;align-self:start;}
+        .side-link{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;font-size:13px;color:#6B7280;transition:all .25s;cursor:pointer;text-decoration:none;border-left:2px solid transparent;}
+        .side-link:hover{color:#E4E4E9;background:rgba(255,255,255,0.02);}
+        .side-link.active{color:var(--accent);background:rgba(0,230,138,0.06);border-left-color:var(--accent);}
+        .side-link i{width:16px;text-align:center;font-size:12px;}
+
+        /* 移动端水平标签 */
+        .mob-tabs{display:none;overflow-x:auto;gap:6px;padding:0 24px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+        .mob-tabs::-webkit-scrollbar{display:none;}
+        .mob-tab{flex-shrink:0;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:transparent;color:#6B7280;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+        .mob-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,230,138,0.06);}
+
+        @media(max-width:1024px){
+            .side-nav-wrap{display:none!important;}
+            .mob-tabs{display:flex!important;}
+        }
+
+        /* 功能模拟 UI 容器 */
+        .mock{background:#0E1017;border:1px solid #1E2130;border-radius:14px;overflow:hidden;position:relative;}
+        .mock-top{display:flex;align-items:center;gap:5px;padding:10px 14px;border-bottom:1px solid #1E2130;}
+        .mock-dot{width:7px;height:7px;border-radius:50%;}
+
+        /* 看板模拟 */
+        .kanban-col{background:#12141C;border-radius:8px;padding:10px;flex:1;min-width:0;}
+        .kanban-card{background:#1A1D28;border-radius:6px;padding:8px 10px;margin-bottom:6px;border-left:3px solid var(--accent);animation:kcs .5s ease-out both;}
+        .kanban-card:nth-child(2){animation-delay:.1s;border-left-color:#00B8D4;}
+        .kanban-card:nth-child(3){animation-delay:.2s;border-left-color:var(--warm);}
+        .kanban-card:nth-child(4){animation-delay:.3s;border-left-color:#A78BFA;}
+        .kl{height:3px;border-radius:2px;background:#222532;margin-bottom:3px;}
+        @keyframes kcs{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+        /* 管道模拟 */
+        .pipe-stage{flex:1;background:#12141C;border-radius:10px;padding:14px 10px;text-align:center;position:relative;}
+        .pipe-stage::after{content:'';position:absolute;right:-12px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:8px solid #2A2D3A;}
+        .pipe-stage:last-child::after{display:none;}
+        .pipe-card{background:#1A1D28;border-radius:6px;padding:8px;margin-top:8px;text-align:left;animation:psa .5s ease-out both;}
+        .pipe-card:nth-child(2){animation-delay:.15s;}
+        @keyframes psa{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+
+        /* 发票模拟 */
+        .inv-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1E2130;animation:ira .4s ease-out both;}
+        .inv-row:nth-child(2){animation-delay:.08s;}.inv-row:nth-child(3){animation-delay:.16s;}.inv-row:nth-child(4){animation-delay:.24s;}
+        @keyframes ira{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+
+        /* HR 模拟 */
+        .hr-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #1E2130;animation:hra .4s ease-out both;}
+        .hr-row:nth-child(2){animation-delay:.1s;}.hr-row:nth-child(3){animation-delay:.2s;}.hr-row:nth-child(4){animation-delay:.3s;}.hr-row:nth-child(5){animation-delay:.4s;}
+        @keyframes hra{from{opacity:0;transform:translateX(-6px);}to{opacity:1;transform:translateX(0);}}
+        .hr-avatar{width:28px;height:28px;border-radius:8px;flex-shrink:0;}
+
+        /* 权限矩阵模拟 */
+        .perm-cell{width:100%;aspect-ratio:1;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;animation:pea .3s ease-out both;}
+        @keyframes pea{from{opacity:0;transform:scale(.7);}to{opacity:1;transform:scale(1);}}
+
+        /* 图表模拟 */
+        .chart-bar{border-radius:3px 3px 0 0;animation:cba .8s ease-out both;}
+        @keyframes cba{from{height:0;}}
+        .chart-line{stroke-dasharray:300;stroke-dashoffset:300;animation:cld 1.5s ease-out forwards;}
+        @keyframes cld{to{stroke-dashoffset:0;}}
+
+        /* 功能详情标签 */
+        .detail-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border);font-size:12px;color:#8B8FA3;}
+
+        /* 功能区块分隔线 */
+        .feat-divider{height:1px;background:linear-gradient(90deg,transparent 0%,var(--border) 20%,var(--border) 80%,transparent 100%);}
+
+        /* 按钮 */
+        .bp{background:var(--accent);color:#08090D;font-weight:600;border:none;padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bp:hover{background:#00cc7a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,230,138,0.22);}
+        .bs{background:transparent;color:#E4E4E9;font-weight:500;border:1px solid var(--border);padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bs:hover{border-color:#3A3E50;background:rgba(255,255,255,0.025);}
+
+        /* 移动菜单 */
+        .mm{position:fixed;inset:0;background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .3s;}
+        .mm.open{opacity:1;pointer-events:all;}
+
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.rv{opacity:1;transform:none;}}
+    </style>
+</head>
+<body class="dot-grid">
+
+<!-- ===== 导航栏 ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+            <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="features.html" class="text-sm text-accent font-medium">Features</a>
+            <a href="how.html" class="text-sm text-gray-400 hover:text-white transition-colors">How It Works</a>
+            <a href="pricing.html" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="compare.html" class="text-sm text-gray-400 hover:text-white transition-colors">Compare</a>
+            <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+            <a href="changelog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Changelog</a>
+        </div>
+        <div class="hidden lg:flex items-center gap-3">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+        </div>
+        <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+</nav>
+
+<div id="mobMenu" class="mm">
+    <button id="mobClose" class="absolute top-5 right-6 text-white text-2xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <a href="index.html" class="text-xl text-gray-300 hover:text-white ml">Home</a>
+    <a href="features.html" class="text-xl text-accent ml">Features</a>
+    <a href="how.html" class="text-xl text-gray-300 hover:text-white ml">How It Works</a>
+    <a href="pricing.html" class="text-xl text-gray-300 hover:text-white ml">Pricing</a>
+    <a href="compare.html" class="text-xl text-gray-300 hover:text-white ml">Compare</a>
+    <a href="about.html" class="text-xl text-gray-300 hover:text-white ml">About</a>
+    <a href="changelog.html" class="text-xl text-gray-300 hover:text-white ml">Changelog</a>
+    <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp mt-4">Sign Up Free</a>
+</div>
+
+<!-- ===== Features Hero ===== -->
+<section class="relative pt-28 pb-20 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.04);top:-100px;left:50%;transform:translateX(-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <div class="rv inline-flex items-center gap-2 bg-accent-dim border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+            <i class="fa-solid fa-layer-group text-accent text-xs"></i>
+            <span class="text-xs font-medium text-accent">6 powerful modules, one workspace</span>
+        </div>
+        <h1 class="rv d1 font-display text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-6">
+            Everything inside <span class="gt">WorkGrid</span>
+        </h1>
+        <p class="rv d2 text-lg text-gray-400 leading-relaxed max-w-xl mx-auto">
+            Not surface-level feature bullets. Here's what each module actually does, how it looks, and why it matters for your team.
+        </p>
+    </div>
+</section>
+
+<!-- ===== 移动端水平标签 ===== -->
+<div class="mob-tabs" id="mobTabs">
+    <button class="mob-tab active" onclick="scrollToFeat('kanban',this)">Kanban</button>
+    <button class="mob-tab" onclick="scrollToFeat('pipeline',this)">Pipeline</button>
+    <button class="mob-tab" onclick="scrollToFeat('invoicing',this)">Invoicing</button>
+    <button class="mob-tab" onclick="scrollToFeat('hr',this)">HR Portal</button>
+    <button class="mob-tab" onclick="scrollToFeat('roles',this)">Roles</button>
+    <button class="mob-tab" onclick="scrollToFeat('analytics',this)">Analytics</button>
+</div>
+
+<!-- ===== 主内容：侧边导航 + 功能区块 ===== -->
+<div class="max-w-7xl mx-auto px-6 pb-24">
+
+    <div class="flex gap-12">
+        <!-- 侧边导航（桌面端） -->
+        <div class="side-nav-wrap hidden lg:block" style="width:200px;flex-shrink:0;">
+            <div class="side-nav">
+                <a href="#kanban" class="side-link active" data-feat="kanban"><i class="fa-solid fa-table-columns"></i> Kanban Boards</a>
+                <a href="#pipeline" class="side-link" data-feat="pipeline"><i class="fa-solid fa-handshake"></i> Deal Pipeline</a>
+                <a href="#invoicing" class="side-link" data-feat="invoicing"><i class="fa-solid fa-file-invoice-dollar"></i> Invoicing</a>
+                <a href="#hr" class="side-link" data-feat="hr"><i class="fa-solid fa-users-gear"></i> HR Portal</a>
+                <a href="#roles" class="side-link" data-feat="roles"><i class="fa-solid fa-shield-halved"></i> Role Access</a>
+                <a href="#analytics" class="side-link" data-feat="analytics"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+            </div>
+        </div>
+
+        <!-- 功能内容 -->
+        <div class="flex-1 min-w-0 space-y-0">
+
+            <!-- ==================== 1. KANBAN BOARDS ==================== -->
+            <section id="kanban" class="pt-8 pb-20">
+                <div class="rv">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-table-columns text-accent"></i></div>
+                        <span class="text-xs text-accent font-semibold tracking-wider uppercase">Module 01</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Kanban Boards</h2>
+                    <p class="text-gray-400 leading-relaxed max-w-2xl mb-10">Visual task management that adapts to your workflow — not the other way around. Drag, drop, customize, and get a clear picture of where everything stands.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 items-start">
+                    <!-- 看板模拟 -->
+                    <div class="rv d1 mock">
+                        <div class="mock-top">
+                            <div class="mock-dot" style="background:#FF5F57;"></div>
+                            <div class="mock-dot" style="background:#FFBD2E;"></div>
+                            <div class="mock-dot" style="background:#28CA41;"></div>
+                            <span class="text-xs text-gray-600 ml-3">Sprint Board — Q4</span>
+                        </div>
+                        <div class="p-4 flex gap-3" style="min-height:260px;">
+                            <div class="kanban-col">
+                                <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 rounded-full bg-gray-500"></span><span class="text-xs text-gray-500 font-medium">To Do</span><span class="text-xs text-gray-600 ml-auto">4</span></div>
+                                <div class="kanban-card"><div class="kl" style="width:85%;"></div><div class="kl" style="width:60%;height:2px;"></div></div>
+                                <div class="kanban-card"><div class="kl" style="width:70%;"></div><div class="kl" style="width:90%;height:2px;"></div></div>
+                                <div class="kanban-card"><div class="kl" style="width:50%;"></div></div>
+                                <div class="kanban-card"><div class="kl" style="width:75%;"></div><div class="kl" style="width:40%;height:2px;"></div></div>
+                            </div>
+                            <div class="kanban-col">
+                                <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 rounded-full bg-accent"></span><span class="text-xs text-gray-500 font-medium">In Progress</span><span class="text-xs text-gray-600 ml-auto">2</span></div>
+                                <div class="kanban-card"><div class="kl" style="width:65%;"></div><div class="kl" style="width:80%;height:2px;"></div></div>
+                                <div class="kanban-card"><div class="kl" style="width:55%;"></div></div>
+                            </div>
+                            <div class="kanban-col">
+                                <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 rounded-full" style="background:#00B8D4;"></span><span class="text-xs text-gray-500 font-medium">Review</span><span class="text-xs text-gray-600 ml-auto">1</span></div>
+                                <div class="kanban-card"><div class="kl" style="width:72%;"></div><div class="kl" style="width:50%;height:2px;"></div></div>
+                            </div>
+                            <div class="kanban-col">
+                                <div class="flex items-center gap-2 mb-3"><span class="w-2 h-2 rounded-full" style="background:#A78BFA;"></span><span class="text-xs text-gray-500 font-medium">Done</span><span class="text-xs text-gray-600 ml-auto">3</span></div>
+                                <div class="kanban-card"><div class="kl" style="width:60%;"></div></div>
+                                <div class="kanban-card"><div class="kl" style="width:80%;"></div><div class="kl" style="width:45%;height:2px;"></div></div>
+                                <div class="kanban-card"><div class="kl" style="width:55%;"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 功能详情 -->
+                    <div class="rv d2 space-y-6">
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Custom Columns</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Name your columns whatever you want — "Backlog," "Sprint 3," "Waiting on Client." Your process, your labels.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Drag-and-Drop</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Smooth, instant card movement. No lag, no "saving..." spinner. Pick it up, drop it, done.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Rich Cards</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Each card holds descriptions, assignees, due dates, labels, attachments, and comments. Everything in context.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Filters and Search</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Filter by assignee, label, due date, or status. Search across all boards instantly. Find anything in seconds.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="detail-tag"><i class="fa-solid fa-arrows-up-down-left-right text-accent text-[10px]"></i> Drag & Drop</span>
+                            <span class="detail-tag"><i class="fa-solid fa-tag text-[10px]" style="color:#00B8D4;"></i> Labels</span>
+                            <span class="detail-tag"><i class="fa-solid fa-calendar text-[10px]" style="color:var(--warm);"></i> Due Dates</span>
+                            <span class="detail-tag"><i class="fa-solid fa-filter text-[10px]" style="color:#A78BFA;"></i> Filters</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="feat-divider"></div>
+
+            <!-- ==================== 2. DEAL PIPELINE ==================== -->
+            <section id="pipeline" class="pt-20 pb-20">
+                <div class="rv">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(167,139,250,0.1);"><i class="fa-solid fa-handshake" style="color:#A78BFA;"></i></div>
+                        <span class="text-xs font-semibold tracking-wider uppercase" style="color:#A78BFA;">Module 02</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Deal Pipeline</h2>
+                    <p class="text-gray-400 leading-relaxed max-w-2xl mb-10">A real CRM pipeline — not a task board pretending to be one. Track deals from first contact to closed-won with visual stages and value tracking.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 items-start">
+                    <div class="rv d1 space-y-6 order-2 lg:order-1">
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Visual Stage Progression</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">See every deal's stage at a glance. Drag deals between stages as they progress. No digging through menus.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Value Forecasting</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Each deal has a monetary value. WorkGrid calculates your pipeline total and weighted forecast automatically.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Contact Profiles</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Every deal links to a contact profile with history, notes, and communication logs. Full context, always.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Win/Loss Tracking</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Mark deals as won or lost with optional reason tracking. Learn from your losses and replicate your wins.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="detail-tag"><i class="fa-solid fa-dollar-sign text-[10px]" style="color:#A78BFA;"></i> Value Tracking</span>
+                            <span class="detail-tag"><i class="fa-solid fa-user text-[10px]" style="color:#A78BFA;"></i> Contact Links</span>
+                            <span class="detail-tag"><i class="fa-solid fa-trophy text-[10px]" style="color:#A78BFA;"></i> Win/Loss</span>
+                        </div>
+                    </div>
+
+                    <!-- 管道模拟 -->
+                    <div class="rv d2 mock order-1 lg:order-2">
+                        <div class="mock-top">
+                            <div class="mock-dot" style="background:#FF5F57;"></div>
+                            <div class="mock-dot" style="background:#FFBD2E;"></div>
+                            <div class="mock-dot" style="background:#28CA41;"></div>
+                            <span class="text-xs text-gray-600 ml-3">Sales Pipeline</span>
+                            <span class="text-xs ml-auto" style="color:#A78BFA;">$84,500 total</span>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex gap-2 mb-4">
+                                <div class="pipe-stage" style="border:1px solid rgba(167,139,250,0.2);">
+                                    <span class="text-[10px] font-medium" style="color:#A78BFA;">Lead</span>
+                                    <span class="text-[10px] text-gray-600 block mt-1">$12K</span>
+                                    <div class="pipe-card"><div class="kl" style="width:65%;background:#222532;"></div></div>
+                                    <div class="pipe-card"><div class="kl" style="width:80%;background:#222532;"></div></div>
+                                </div>
+                                <div class="pipe-stage" style="border:1px solid rgba(167,139,250,0.15);">
+                                    <span class="text-[10px] font-medium" style="color:#A78BFA;">Qualified</span>
+                                    <span class="text-[10px] text-gray-600 block mt-1">$28K</span>
+                                    <div class="pipe-card"><div class="kl" style="width:55%;background:#222532;"></div></div>
+                                </div>
+                                <div class="pipe-stage" style="border:1px solid rgba(167,139,250,0.1);">
+                                    <span class="text-[10px] font-medium" style="color:#A78BFA;">Proposal</span>
+                                    <span class="text-[10px] text-gray-600 block mt-1">$24.5K</span>
+                                    <div class="pipe-card"><div class="kl" style="width:70%;background:#222532;"></div></div>
+                                    <div class="pipe-card"><div class="kl" style="width:50%;background:#222532;"></div></div>
+                                </div>
+                                <div class="pipe-stage" style="border:1px solid rgba(0,230,138,0.2);">
+                                    <span class="text-[10px] font-medium text-accent">Won</span>
+                                    <span class="text-[10px] text-gray-600 block mt-1">$20K</span>
+                                    <div class="pipe-card" style="border-left:2px solid var(--accent);"><div class="kl" style="width:60%;background:#222532;"></div></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-[10px] text-gray-600 px-2">
+                                <span>4 active deals</span>
+                                <span>2 closed this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="feat-divider"></div>
+
+            <!-- ==================== 3. INVOICING ==================== -->
+            <section id="invoicing" class="pt-20 pb-20">
+                <div class="rv">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl bg-warm-dim flex items-center justify-center"><i class="fa-solid fa-file-invoice-dollar text-warm"></i></div>
+                        <span class="text-xs text-warm font-semibold tracking-wider uppercase">Module 03</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Built-in Invoicing</h2>
+                    <p class="text-gray-400 leading-relaxed max-w-2xl mb-10">Stop exporting data to a separate invoicing tool. Create, send, and track invoices right inside WorkGrid — linked to your projects and clients.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 items-start">
+                    <!-- 发票模拟 -->
+                    <div class="rv d1 mock">
+                        <div class="mock-top">
+                            <div class="mock-dot" style="background:#FF5F57;"></div>
+                            <div class="mock-dot" style="background:#FFBD2E;"></div>
+                            <div class="mock-dot" style="background:#28CA41;"></div>
+                            <span class="text-xs text-gray-600 ml-3">Invoice #WG-0042</span>
+                            <span class="text-xs ml-auto px-2 py-0.5 rounded-full" style="background:rgba(0,230,138,0.1);color:var(--accent);">Paid</span>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <div class="h-3 w-20 rounded bg-dark-400 mb-1.5"></div>
+                                    <div class="h-2 w-32 rounded bg-dark-500"></div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xs text-gray-500 mb-1">Bill To</div>
+                                    <div class="h-2.5 w-28 rounded bg-dark-400 mb-1"></div>
+                                    <div class="h-2 w-24 rounded bg-dark-500"></div>
+                                </div>
+                            </div>
+                            <div class="text-[10px] text-gray-600 grid grid-cols-4 gap-2 mb-2 px-1">
+                                <span>Item</span><span class="text-right">Qty</span><span class="text-right">Rate</span><span class="text-right">Amount</span>
+                            </div>
+                            <div class="inv-row text-[11px] px-1"><span class="text-gray-400">Website Redesign</span><span class="text-gray-500">1</span><span class="text-gray-500">$3,500</span><span class="text-gray-400 font-medium">$3,500</span></div>
+                            <div class="inv-row text-[11px] px-1"><span class="text-gray-400">SEO Optimization</span><span class="text-gray-500">1</span><span class="text-gray-500">$1,200</span><span class="text-gray-400 font-medium">$1,200</span></div>
+                            <div class="inv-row text-[11px] px-1"><span class="text-gray-400">Monthly Maintenance</span><span class="text-gray-500">3</span><span class="text-gray-500">$400</span><span class="text-gray-400 font-medium">$1,200</span></div>
+                            <div class="inv-row text-[11px] px-1" style="border-bottom:none;"><span class="text-gray-400">Content Writing</span><span class="text-gray-500">5</span><span class="text-gray-500">$200</span><span class="text-gray-400 font-medium">$1,000</span></div>
+                            <div class="flex justify-end mt-4 pr-1">
+                                <div class="text-right" style="min-width:120px;">
+                                    <div class="flex justify-between text-[11px] text-gray-500 mb-1"><span>Subtotal</span><span>$6,900</span></div>
+                                    <div class="flex justify-between text-[11px] text-gray-500 mb-2"><span>Tax (0%)</span><span>$0</span></div>
+                                    <div class="h-px bg-dark-400 mb-2"></div>
+                                    <div class="flex justify-between text-sm text-white font-semibold"><span>Total</span><span style="color:var(--warm);">$6,900</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 详情 -->
+                    <div class="rv d2 space-y-6">
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Create in Seconds</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Pick a client, add line items, set rates — your invoice is ready. No setup wizard, no template hell.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Payment Tracking</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">See at a glance which invoices are draft, sent, paid, or overdue. Status badges update automatically.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Due Date Reminders</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Set due dates and get notified before invoices are overdue. Never chase payments late again.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Export and Reports</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Export invoices as PDF. Run revenue reports by client, month, or project. Everything accountants need.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Linked to Projects</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Invoices connect directly to your projects and tasks. See exactly what work each invoice covers.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="detail-tag"><i class="fa-solid fa-file-pdf text-[10px]" style="color:var(--warm);"></i> PDF Export</span>
+                            <span class="detail-tag"><i class="fa-solid fa-bell text-[10px]" style="color:var(--warm);"></i> Reminders</span>
+                            <span class="detail-tag"><i class="fa-solid fa-link text-[10px]" style="color:var(--warm);"></i> Project Links</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="feat-divider"></div>
+
+            <!-- ==================== 4. HR PORTAL ==================== -->
+            <section id="hr" class="pt-20 pb-20">
+                <div class="rv">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(0,184,212,0.1);"><i class="fa-solid fa-users-gear" style="color:#00B8D4;"></i></div>
+                        <span class="text-xs font-semibold tracking-wider uppercase" style="color:#00B8D4;">Module 04</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">HR Portal</h2>
+                    <p class="text-gray-400 leading-relaxed max-w-2xl mb-10">A dedicated workspace for HR operations — completely isolated from other modules. Only HR roles can see it. Your team's data stays private.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 items-start">
+                    <div class="rv d1 space-y-6 order-2 lg:order-1">
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Employee Directory</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Centralized employee profiles with contact info, role, department, and join date. Searchable and always up to date.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Leave Management</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Employees request leave, managers approve or reject. Balance tracking, history, and calendar view built in.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Attendance Tracking</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Clock in, clock out, or log hours manually. See who's working, who's late, and who's on leave — today or any date range.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Onboarding Workflows</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Create onboarding checklists for new hires. Assign tasks, track completion, and make day one seamless.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Fully Private</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">HR data is invisible to non-HR roles. No accidental data leaks. Role-based isolation at the database level.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="detail-tag"><i class="fa-solid fa-lock text-[10px]" style="color:#00B8D4;"></i> Private by Role</span>
+                            <span class="detail-tag"><i class="fa-solid fa-plane-departure text-[10px]" style="color:#00B8D4;"></i> Leave Mgmt</span>
+                            <span class="detail-tag"><i class="fa-solid fa-clock text-[10px]" style="color:#00B8D4;"></i> Attendance</span>
+                        </div>
+                    </div>
+
+                    <!-- HR 模拟 -->
+                    <div class="rv d2 mock order-1 lg:order-2">
+                        <div class="mock-top">
+                            <div class="mock-dot" style="background:#FF5F57;"></div>
+                            <div class="mock-dot" style="background:#FFBD2E;"></div>
+                            <div class="mock-dot" style="background:#28CA41;"></div>
+                            <span class="text-xs text-gray-600 ml-3">HR Portal — Team Directory</span>
+                            <span class="text-xs ml-auto" style="color:#00B8D4;">12 members</span>
+                        </div>
+                        <div class="py-2">
+                            <div class="hr-row">
+                                <div class="hr-avatar" style="background:rgba(0,230,138,0.15);"></div>
+                                <div class="flex-1 min-w-0"><div class="h-2.5 w-24 rounded bg-dark-400 mb-1"></div><div class="h-2 w-16 rounded bg-dark-500"></div></div>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(0,230,138,0.1);color:var(--accent);">Active</span>
+                            </div>
+                            <div class="hr-row">
+                                <div class="hr-avatar" style="background:rgba(0,184,212,0.15);"></div>
+                                <div class="flex-1 min-w-0"><div class="h-2.5 w-20 rounded bg-dark-400 mb-1"></div><div class="h-2 w-14 rounded bg-dark-500"></div></div>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(0,230,138,0.1);color:var(--accent);">Active</span>
+                            </div>
+                            <div class="hr-row">
+                                <div class="hr-avatar" style="background:rgba(255,120,73,0.15);"></div>
+                                <div class="flex-1 min-w-0"><div class="h-2.5 w-28 rounded bg-dark-400 mb-1"></div><div class="h-2 w-20 rounded bg-dark-500"></div></div>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(255,120,73,0.1);color:var(--warm);">On Leave</span>
+                            </div>
+                            <div class="hr-row">
+                                <div class="hr-avatar" style="background:rgba(167,139,250,0.15);"></div>
+                                <div class="flex-1 min-w-0"><div class="h-2.5 w-22 rounded bg-dark-400 mb-1"></div><div class="h-2 w-18 rounded bg-dark-500"></div></div>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(0,230,138,0.1);color:var(--accent);">Active</span>
+                            </div>
+                            <div class="hr-row" style="border-bottom:none;">
+                                <div class="hr-avatar" style="background:rgba(251,191,36,0.15);"></div>
+                                <div class="flex-1 min-w-0"><div class="h-2.5 w-26 rounded bg-dark-400 mb-1"></div><div class="h-2 w-12 rounded bg-dark-500"></div></div>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full" style="background:rgba(0,230,138,0.1);color:var(--accent);">Active</span>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-3 flex gap-2">
+                            <div class="flex-1 bg-dark-700 rounded-lg p-3 text-center"><div class="text-lg font-display font-bold text-white">10</div><div class="text-[10px] text-gray-500">Active</div></div>
+                            <div class="flex-1 bg-dark-700 rounded-lg p-3 text-center"><div class="text-lg font-display font-bold" style="color:var(--warm);">1</div><div class="text-[10px] text-gray-500">On Leave</div></div>
+                            <div class="flex-1 bg-dark-700 rounded-lg p-3 text-center"><div class="text-lg font-display font-bold" style="color:#00B8D4;">2</div><div class="text-[10px] text-gray-500">New This Month</div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="feat-divider"></div>
+
+            <!-- ==================== 5. ROLE-BASED ACCESS ==================== -->
+            <section id="roles" class="pt-20 pb-20">
+                <div class="rv">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(251,191,36,0.1);"><i class="fa-solid fa-shield-halved" style="color:#FBBF24;"></i></div>
+                        <span class="text-xs font-semibold tracking-wider uppercase" style="color:#FBBF24;">Module 05</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Role-Based Access</h2>
+                    <p class="text-gray-400 leading-relaxed max-w-2xl mb-10">Not everyone should see everything. WorkGrid's permission system ensures each role sees only what they need — no more, no less.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 items-start">
+                    <!-- 权限矩阵模拟 -->
+                    <div class="rv d1 mock">
+                        <div class="mock-top">
+                            <div class="mock-dot" style="background:#FF5F57;"></div>
+                            <div class="mock-dot" style="background:#FFBD2E;"></div>
+                            <div class="mock-dot" style="background:#28CA41;"></div>
+                            <span class="text-xs text-gray-600 ml-3">Permission Matrix</span>
+                        </div>
+                        <div class="p-4 overflow-x-auto">
+                            <table class="w-full text-[10px]" style="border-collapse:separate;border-spacing:4px;">
+                                <thead>
+                                    <tr><th class="text-left text-gray-500 font-medium pb-2 pr-4"></th><th class="text-gray-500 font-medium pb-2 px-2">Tasks</th><th class="text-gray-500 font-medium pb-2 px-2">Deals</th><th class="text-gray-500 font-medium pb-2 px-2">Invoices</th><th class="text-gray-500 font-medium pb-2 px-2">HR</th><th class="text-gray-500 font-medium pb-2 px-2">Analytics</th><th class="text-gray-500 font-medium pb-2 px-2">Settings</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-gray-400 font-medium py-1 pr-4">Admin</td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:0s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.05s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.1s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.15s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.2s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.25s;"><i class="fa-solid fa-check"></i></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-gray-400 font-medium py-1 pr-4">HR Manager</td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.1s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.15s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.2s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.25s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,183,77,0.12);color:#FFB74D;animation-delay:.3s;"><i class="fa-solid fa-eye"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.35s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-gray-400 font-medium py-1 pr-4">Sales</td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.2s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.25s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,183,77,0.12);color:#FFB74D;animation-delay:.3s;"><i class="fa-solid fa-eye"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.35s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,183,77,0.12);color:#FFB74D;animation-delay:.4s;"><i class="fa-solid fa-eye"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.45s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-gray-400 font-medium py-1 pr-4">Team Member</td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(0,230,138,0.15);color:var(--accent);animation-delay:.3s;"><i class="fa-solid fa-check"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.35s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.4s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.45s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.5s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                        <td class="py-1 px-2"><div class="perm-cell" style="background:rgba(255,255,255,0.03);color:#3A3E50;animation-delay:.55s;"><i class="fa-solid fa-xmark"></i></div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="flex items-center gap-4 mt-4 pt-3 border-t border-dark-400 text-[10px] text-gray-600">
+                                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded" style="background:rgba(0,230,138,0.15);"></span> Full Access</span>
+                                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded" style="background:rgba(255,183,77,0.12);"></span> View Only</span>
+                                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded" style="background:rgba(255,255,255,0.03);"></span> No Access</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 详情 -->
+                    <div class="rv d2 space-y-6">
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Predefined Roles</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Admin, HR Manager, Sales, and Team Member roles out of the box. Each with sensible defaults you can customize.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Custom Roles</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Need something specific? Create custom roles with exact permissions per module. As granular as you need.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Module-Level Isolation</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Permissions aren't just "can edit" or "can view." They're per module. HR data is truly invisible to sales — not just hidden in the UI.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">No Accidental Leaks</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">A team member can't guess a URL to see HR data. Access is enforced at every layer — UI, API, and database.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="detail-tag"><i class="fa-solid fa-user-shield text-[10px]" style="color:#FBBF24;"></i> Predefined Roles</span>
+                            <span class="detail-tag"><i class="fa-solid fa-sliders text-[10px]" style="color:#FBBF24;"></i> Custom Roles</span>
+                            <span class="detail-tag"><i class="fa-solid fa-database text-[10px]" style="color:#FBBF24;"></i> DB-Level</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="feat-divider"></div>
+
+            <!-- ==================== 6. ANALYTICS ==================== -->
+            <section id="analytics" class="pt-20 pb-8">
+                <div class="rv">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(244,114,182,0.1);"><i class="fa-solid fa-chart-line" style="color:#F472B6;"></i></div>
+                        <span class="text-xs font-semibold tracking-wider uppercase" style="color:#F472B6;">Module 06</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Real-Time Analytics</h2>
+                    <p class="text-gray-400 leading-relaxed max-w-2xl mb-10">Dashboards that update as your team works. No "refresh to see latest data." See what's happening right now — productivity, revenue, and team performance.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 items-start">
+                    <!-- 详情 -->
+                    <div class="rv d1 space-y-6 order-2 lg:order-1">
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Live Dashboards</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Task completion rates, deal pipeline value, invoice status distribution — all updating in real time as your team works.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Revenue Tracking</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">See monthly revenue from invoices, deal pipeline forecasts, and MRR trends. Financial clarity without spreadsheets.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Team Productivity</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Who's completing tasks, who's blocked, and who's crushing it. Identify bottlenecks before they become problems.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Exportable Reports</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">Need to share with stakeholders? Export any dashboard or report as PDF or CSV. Clean, formatted, ready to present.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-semibold text-white mb-2">Date Range Filtering</h3>
+                            <p class="text-sm text-gray-500 leading-relaxed">View today, this week, this month, this quarter, or any custom range. Compare periods to spot trends.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="detail-tag"><i class="fa-solid fa-bolt text-[10px]" style="color:#F472B6;"></i> Real-Time</span>
+                            <span class="detail-tag"><i class="fa-solid fa-download text-[10px]" style="color:#F472B6;"></i> Export</span>
+                            <span class="detail-tag"><i class="fa-solid fa-calendar-days text-[10px]" style="color:#F472B6;"></i> Date Ranges</span>
+                        </div>
+                    </div>
+
+                    <!-- 分析模拟 -->
+                    <div class="rv d2 mock order-1 lg:order-2">
+                        <div class="mock-top">
+                            <div class="mock-dot" style="background:#FF5F57;"></div>
+                            <div class="mock-dot" style="background:#FFBD2E;"></div>
+                            <div class="mock-dot" style="background:#28CA41;"></div>
+                            <span class="text-xs text-gray-600 ml-3">Analytics Dashboard</span>
+                            <span class="text-xs ml-auto" style="color:#F472B6;">Live</span>
+                        </div>
+                        <div class="p-4">
+                            <!-- 统计卡片 -->
+                            <div class="grid grid-cols-3 gap-3 mb-5">
+                                <div class="bg-dark-700 rounded-lg p-3 text-center">
+                                    <div class="text-lg font-display font-bold text-white">147</div>
+                                    <div class="text-[10px] text-gray-500">Tasks Done</div>
+                                </div>
+                                <div class="bg-dark-700 rounded-lg p-3 text-center">
+                                    <div class="text-lg font-display font-bold" style="color:var(--warm);">$32.4K</div>
+                                    <div class="text-[10px] text-gray-500">Revenue</div>
+                                </div>
+                                <div class="bg-dark-700 rounded-lg p-3 text-center">
+                                    <div class="text-lg font-display font-bold" style="color:#00B8D4;">89%</div>
+                                    <div class="text-[10px] text-gray-500">Completion</div>
+                                </div>
+                            </div>
+                            <!-- 柱状图 -->
+                            <div class="bg-dark-700 rounded-lg p-4 mb-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-[10px] text-gray-500 font-medium">Weekly Task Completion</span>
+                                    <span class="text-[10px] text-gray-600">Last 8 weeks</span>
+                                </div>
+                                <div class="flex items-end gap-2" style="height:80px;">
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:45%;background:var(--accent);animation-delay:.2s;"></div>
+                                        <span class="text-[8px] text-gray-600">W1</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:60%;background:var(--accent);animation-delay:.3s;"></div>
+                                        <span class="text-[8px] text-gray-600">W2</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:35%;background:var(--accent);animation-delay:.4s;"></div>
+                                        <span class="text-[8px] text-gray-600">W3</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:75%;background:var(--accent);animation-delay:.5s;"></div>
+                                        <span class="text-[8px] text-gray-600">W4</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:55%;background:#00B8D4;animation-delay:.6s;"></div>
+                                        <span class="text-[8px] text-gray-600">W5</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:85%;background:#00B8D4;animation-delay:.7s;"></div>
+                                        <span class="text-[8px] text-gray-600">W6</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:70%;background:var(--warm);animation-delay:.8s;"></div>
+                                        <span class="text-[8px] text-gray-600">W7</span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center gap-1">
+                                        <div class="w-full chart-bar" style="height:95%;background:var(--warm);animation-delay:.9s;"></div>
+                                        <span class="text-[8px] text-gray-600">W8</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 趋势线 -->
+                            <div class="bg-dark-700 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[10px] text-gray-500 font-medium">Revenue Trend</span>
+                                    <span class="text-[10px] text-accent">+24% vs last month</span>
+                                </div>
+                                <svg viewBox="0 0 300 60" class="w-full" style="height:60px;">
+                                    <polyline class="chart-line" fill="none" stroke="#F472B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,50 40,42 80,45 120,30 160,35 200,20 240,18 280,8"/>
+                                    <polyline fill="none" stroke="rgba(244,114,182,0.15)" stroke-width="0" points="0,60 0,50 40,42 80,45 120,30 160,35 200,20 240,18 280,8 280,60"/>
+                                    <polygon fill="rgba(244,114,182,0.08)" points="0,50 40,42 80,45 120,30 160,35 200,20 240,18 280,8 280,60 0,60"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /功能内容 -->
+    </div><!-- /flex容器 -->
+
+</div><!-- /max-w-7xl -->
+
+<!-- ===== 底部 CTA ===== -->
+<section class="relative py-24 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.04);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <h2 class="rv font-display text-3xl sm:text-4xl font-bold text-white mb-5">Seen enough? <span class="gt">Try it free.</span></h2>
+        <p class="rv d1 text-gray-400 mb-8 max-w-lg mx-auto">Every module above is available right now, for free, during early access. No limits, no credit card.</p>
+        <div class="rv d2 flex flex-wrap gap-4 justify-center">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free Now <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="compare.html" class="bs">Compare with Others</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="border-t border-dark-400 py-14 bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
+            <div class="lg:col-span-2">
+                <a href="index.html" class="flex items-center gap-2.5 mb-4">
+                    <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+                    <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xs mb-5">The all-in-one workspace that combines tasks, CRM, invoicing, and HR.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li>
+                    <li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li>
+                    <li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li>
+                    <li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li>
+                    <li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li>
+                    <li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li>
+                    <li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4>
+                <ul class="space-y-2.5">
+                    <li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li>
+                    <li><a href="contact.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-dark-400 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-600">2026 WorkGrid. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with frustration and caffeine.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// 导航栏滚动
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('nav-scrolled',scrollY>40);});
+
+// 移动菜单
+const mm=document.getElementById('mobMenu');
+document.getElementById('mobBtn').onclick=()=>mm.classList.add('open');
+document.getElementById('mobClose').onclick=()=>mm.classList.remove('open');
+document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('open'));
+
+// 滚动显现
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// 粘性侧边导航 — 滚动时高亮当前区块
+const sections=document.querySelectorAll('section[id]');
+const sideLinks=document.querySelectorAll('.side-link');
+
+function updateActiveLink(){
+    let current='';
+    sections.forEach(s=>{
+        const top=s.offsetTop-120;
+        if(scrollY>=top)current=s.id;
+    });
+    sideLinks.forEach(l=>{
+        l.classList.toggle('active',l.getAttribute('data-feat')===current);
+    });
+}
+window.addEventListener('scroll',updateActiveLink);
+updateActiveLink();
+
+// 移动端标签点击滚动
+function scrollToFeat(id,btn){
+    const el=document.getElementById(id);
+    if(el){
+        el.scrollIntoView({behavior:'smooth',block:'start'});
+        document.querySelectorAll('.mob-tab').forEach(t=>t.classList.remove('active'));
+        if(btn)btn.classList.add('active');
+    }
+}
+
+// 移动端标签跟随滚动高亮
+const mobTabs=document.querySelectorAll('.mob-tab');
+const featIds=['kanban','pipeline','invoicing','hr','roles','analytics'];
+function updateMobTab(){
+    let current='';
+    sections.forEach(s=>{
+        const top=s.offsetTop-120;
+        if(scrollY>=top)current=s.id;
+    });
+    mobTabs.forEach((t,i)=>{
+        t.classList.toggle('active',featIds[i]===current);
+    });
+}
+window.addEventListener('scroll',updateMobTab);
+
+// 平滑滚动
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+</script>
+</body>
+</html>

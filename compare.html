@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare — WorkGrid vs HubSpot, Monday, ClickUp, Notion, Salesforce</title>
+    <meta name="description" content="Honest head-to-head comparison: WorkGrid vs HubSpot, Monday.com, ClickUp, Notion, and Salesforce. See who wins on features, price, and simplicity.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { display:['Space Grotesk','sans-serif'], body:['DM Sans','sans-serif'] },
+                    colors: {
+                        dark:{950:'#05060A',900:'#08090D',800:'#0E1017',700:'#12141C',600:'#1A1D28',500:'#222532',400:'#2A2D3A',300:'#3A3E50'},
+                        accent:{DEFAULT:'#00E68A',dim:'rgba(0,230,138,0.08)',mid:'rgba(0,230,138,0.2)',glow:'rgba(0,230,138,0.35)'},
+                        warm:{DEFAULT:'#FF7849',dim:'rgba(255,120,73,0.1)'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root{--accent:#00E68A;--warm:#FF7849;--bg:#08090D;--card:#1A1D28;--border:#2A2D3A;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E4E4E9;overflow-x:hidden;}
+        h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0E1017;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:3px;}
+        .wg-logo{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;width:28px;height:28px;}
+        .wg-logo span{border-radius:3px;transition:background .3s;}
+        .wg-logo .on{background:var(--accent);}.wg-logo .off{background:rgba(255,255,255,0.08);}.wg-logo .warm{background:var(--warm);}
+        .dot-grid{background-image:radial-gradient(circle,#1E2130 1px,transparent 1px);background-size:30px 30px;}
+        .glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+        .gt{background:linear-gradient(135deg,#00E68A 0%,#00B8D4 50%,#00E68A 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .gt-w{background:linear-gradient(135deg,#FF7849 0%,#FFB347 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .nav-scrolled{background:rgba(8,9,13,0.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid rgba(42,45,58,0.5)!important;}
+
+        .rv{opacity:0;transform:translateY(36px);transition:opacity .65s ease,transform .65s cubic-bezier(.25,.46,.45,.94);}
+        .rv.fl{transform:translateX(-36px) translateY(0);}
+        .rv.fr{transform:translateX(36px) translateY(0);}
+        .rv.fs{transform:scale(.93);}
+        .rv.on{opacity:1;transform:translate(0) scale(1);}
+        .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}
+
+        /* 竞品筛选标签 */
+        .comp-tab{padding:10px 20px;border-radius:12px;font-size:13px;font-weight:500;border:1px solid var(--border);background:transparent;color:#6B7280;cursor:pointer;transition:all .25s;font-family:'Space Grotesk',sans-serif;white-space:nowrap;}
+        .comp-tab:hover{border-color:#3A3E50;color:#E4E4E9;}
+        .comp-tab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,230,138,0.06);}
+
+        /* 对决卡片 */
+        .vs-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;transition:all .3s;}
+        .vs-card:hover{border-color:#3A3E50;}
+
+        /* 对决徽章 */
+        .vs-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:600;}
+        .vs-badge.good{background:rgba(0,230,138,0.1);color:var(--accent);}
+        .vs-badge.bad{background:rgba(255,82,82,0.08);color:#FF5252;}
+        .vs-badge.neutral{background:rgba(255,255,255,0.04);color:#6B7280;}
+
+        /* 优缺点列表 */
+        .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+        .pros-cons>div{padding:16px;border-radius:12px;}
+        .pros-box{background:rgba(0,230,138,0.03);border:1px solid rgba(0,230,138,0.1);}
+        .cons-box{background:rgba(255,82,82,0.02);border:1px solid rgba(255,82,82,0.08);}
+        .pc-item{display:flex;align-items:start;gap:8px;font-size:13px;line-height:1.5;margin-bottom:8px;}
+        .pc-item:last-child{margin-bottom:0;}
+
+        /* 大对比表 */
+        .mx{width:100%;border-collapse:separate;border-spacing:0;}
+        .mx th,.mx td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--border);font-size:13px;}
+        .mx thead th{background:#0E1017;font-weight:600;position:sticky;top:0;z-index:2;padding:16px;}
+        .mx thead th:first-child{text-align:left;border-radius:14px 0 0 0;}
+        .mx thead th:last-child{border-radius:0 14px 0 0;}
+        .mx td:first-child{text-align:left;font-weight:500;color:#E4E4E9;max-width:200px;}
+        .mx tbody tr{transition:background .15s;}
+        .mx tbody tr:hover td{background:rgba(26,29,40,0.5);}
+        .mx .wg-col{background:rgba(0,230,138,0.03);}
+        .mx .wg-col:hover{background:rgba(0,230,138,0.06);}
+        .mx .cat-row td{background:#0E1017;font-weight:600;color:#8B8FA3;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;padding:10px 16px;}
+        .ck{color:var(--accent);font-size:15px;}.xr{color:#FF5252;font-size:15px;opacity:.45;}.pt{color:#FFB74D;font-size:15px;}
+
+        /* 切换成本计算器 */
+        .cs{-webkit-appearance:none;appearance:none;width:100%;height:5px;background:#222532;border-radius:3px;outline:none;}
+        .cs::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 10px rgba(0,230,138,0.35);}
+
+        /* 离开原因卡片 */
+        .leave-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .3s;position:relative;overflow:hidden;}
+        .leave-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;}
+        .leave-card:hover{border-color:#3A3E50;transform:translateY(-2px);}
+
+        /* VS 分隔符 */
+        .vs-sep{width:48px;height:48px;border-radius:50%;background:#222532;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#6B7280;flex-shrink:0;z-index:2;}
+
+        .feat-divider{height:1px;background:linear-gradient(90deg,transparent 0%,var(--border) 20%,var(--border) 80%,transparent 100%);}
+
+        .bp{background:var(--accent);color:#08090D;font-weight:600;border:none;padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bp:hover{background:#00cc7a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,230,138,0.22);}
+        .bs{background:transparent;color:#E4E4E9;font-weight:500;border:1px solid var(--border);padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bs:hover{border-color:#3A3E50;background:rgba(255,255,255,0.025);}
+
+        .mm{position:fixed;inset:0;background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .3s;}
+        .mm.open{opacity:1;pointer-events:all;}
+
+        @media(max-width:768px){
+            .mx{font-size:11px;}.mx th,.mx td{padding:10px 7px;}
+            .pros-cons{grid-template-columns:1fr;}
+            .vs-layout{flex-direction:column!important;}
+            .vs-sep{transform:rotate(90deg);margin:-8px auto;}
+        }
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.rv{opacity:1;transform:none;}}
+    </style>
+</head>
+<body class="dot-grid">
+
+<!-- ===== 导航栏 ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+            <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="features.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+            <a href="how.html" class="text-sm text-gray-400 hover:text-white transition-colors">How It Works</a>
+            <a href="pricing.html" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="compare.html" class="text-sm text-accent font-medium">Compare</a>
+            <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+            <a href="changelog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Changelog</a>
+        </div>
+        <div class="hidden lg:flex items-center gap-3">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+        </div>
+        <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+</nav>
+
+<div id="mobMenu" class="mm">
+    <button id="mobClose" class="absolute top-5 right-6 text-white text-2xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <a href="index.html" class="text-xl text-gray-300 hover:text-white ml">Home</a>
+    <a href="features.html" class="text-xl text-gray-300 hover:text-white ml">Features</a>
+    <a href="how.html" class="text-xl text-gray-300 hover:text-white ml">How It Works</a>
+    <a href="pricing.html" class="text-xl text-gray-300 hover:text-white ml">Pricing</a>
+    <a href="compare.html" class="text-xl text-accent ml">Compare</a>
+    <a href="about.html" class="text-xl text-gray-300 hover:text-white ml">About</a>
+    <a href="changelog.html" class="text-xl text-gray-300 hover:text-white ml">Changelog</a>
+    <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp mt-4">Sign Up Free</a>
+</div>
+
+<!-- ===== Hero ===== -->
+<section class="relative pt-28 pb-16 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.04);top:-80px;left:50%;transform:translateX(-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <div class="rv inline-flex items-center gap-2 bg-accent-dim border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+            <i class="fa-solid fa-scale-balanced text-accent text-xs"></i>
+            <span class="text-xs font-medium text-accent">Honest comparisons, no marketing spin</span>
+        </div>
+        <h1 class="rv d1 font-display text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-6">
+            WorkGrid vs. <span class="gt">the rest</span>
+        </h1>
+        <p class="rv d2 text-lg text-gray-400 leading-relaxed max-w-xl mx-auto">
+            We're not going to cherry-pick features or use vague checkmarks. Here's exactly how WorkGrid stacks up against every major competitor — the good, the bad, and the missing.
+        </p>
+    </div>
+</section>
+
+<!-- ===== 快速结论 ===== -->
+<section class="pb-20">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="rv text-center mb-10">
+            <h2 class="font-display text-2xl font-bold text-white">Quick Verdict</h2>
+            <p class="text-sm text-gray-500 mt-2">One-sentence takeaway for each comparison</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="rv vs-card text-center" style="padding:20px;">
+                <div class="w-10 h-10 rounded-xl bg-dark-500 flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-h text-orange-500 text-sm"></i></div>
+                <p class="font-display font-semibold text-white text-sm mb-1">vs HubSpot</p>
+                <p class="text-xs text-gray-500 leading-relaxed">Same CRM power, 1/10th the price, plus invoicing and HR.</p>
+                <span class="vs-badge good mt-3"><i class="fa-solid fa-trophy text-[9px]"></i> WorkGrid</span>
+            </div>
+            <div class="rv d1 vs-card text-center" style="padding:20px;">
+                <div class="w-10 h-10 rounded-xl bg-dark-500 flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-circle-check text-purple-500 text-sm"></i></div>
+                <p class="font-display font-semibold text-white text-sm mb-1">vs Monday</p>
+                <p class="text-xs text-gray-500 leading-relaxed">Monday has tasks. WorkGrid has tasks + deals + invoicing + HR.</p>
+                <span class="vs-badge good mt-3"><i class="fa-solid fa-trophy text-[9px]"></i> WorkGrid</span>
+            </div>
+            <div class="rv d2 vs-card text-center" style="padding:20px;">
+                <div class="w-10 h-10 rounded-xl bg-dark-500 flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-bolt text-blue-400 text-sm"></i></div>
+                <p class="font-display font-semibold text-white text-sm mb-1">vs ClickUp</p>
+                <p class="text-xs text-gray-500 leading-relaxed">ClickUp has more features. None of them are invoicing or HR.</p>
+                <span class="vs-badge good mt-3"><i class="fa-solid fa-trophy text-[9px]"></i> WorkGrid</span>
+            </div>
+            <div class="rv d3 vs-card text-center" style="padding:20px;">
+                <div class="w-10 h-10 rounded-xl bg-dark-500 flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-n text-gray-400 text-sm"></i></div>
+                <p class="font-display font-semibold text-white text-sm mb-1">vs Notion</p>
+                <p class="text-xs text-gray-500 leading-relaxed">Notion is a wiki, not a CRM. You'll outgrow it fast.</p>
+                <span class="vs-badge good mt-3"><i class="fa-solid fa-trophy text-[9px]"></i> WorkGrid</span>
+            </div>
+            <div class="rv d4 vs-card text-center" style="padding:20px;">
+                <div class="w-10 h-10 rounded-xl bg-dark-500 flex items-center justify-center mx-auto mb-3"><i class="fa-solid fa-cloud text-sky-400 text-sm"></i></div>
+                <p class="font-display font-semibold text-white text-sm mb-1">vs Salesforce</p>
+                <p class="text-xs text-gray-500 leading-relaxed">Enterprise power, zero simplicity. WorkGrid is the anti-Salesforce.</p>
+                <span class="vs-badge good mt-3"><i class="fa-solid fa-trophy text-[9px]"></i> WorkGrid</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ============================== -->
+<!-- ===== HEAD-TO-HEAD SECTIONS ===== -->
+<!-- ============================== -->
+
+<!-- ===== VS HUBSPOT ===== -->
+<section id="vs-hubspot" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <div class="inline-flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-dark-600 flex items-center justify-center"><i class="fa-solid fa-h text-orange-500 text-lg"></i></div>
+                <span class="text-gray-600 font-display font-bold text-xl">VS</span>
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-lg"></i></div>
+            </div>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">WorkGrid vs. HubSpot</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">HubSpot is the 800-pound gorilla of CRMs. Powerful marketing tools, massive ecosystem. But for small teams who just need to manage work — it's overkill in the worst way.</p>
+        </div>
+
+        <div class="rv vs-layout flex items-stretch gap-4 mb-10" style="display:flex;">
+            <!-- HubSpot 侧 -->
+            <div class="vs-card flex-1">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-dark-500 flex items-center justify-center"><i class="fa-solid fa-h text-orange-500 text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-white text-sm">HubSpot</p><p class="text-[11px] text-gray-600">Marketing-first CRM</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-orange-400 font-semibold uppercase tracking-wider mb-2">What they do well</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-orange-400 text-[10px] mt-1.5"></i>Best-in-class marketing automation</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-orange-400 text-[10px] mt-1.5"></i>Huge integration marketplace (1,000+)</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-orange-400 text-[10px] mt-1.5"></i>Excellent content and SEO tools</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-orange-400 text-[10px] mt-1.5"></i>Free CRM tier exists (limited)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-red-400 font-semibold uppercase tracking-wider mb-2">Where they fall short</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Free tier is a lead magnet, not usable — you hit paywalls instantly</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No invoicing — you need a separate tool for that</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No HR module at any price point</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Starter plan: $20/mo per user, jumps to $500+/mo for real features</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Steep learning curve — onboarding takes days to weeks</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Task management is basic — not a real project tool</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vs-sep self-center">VS</div>
+
+            <!-- WorkGrid 侧 -->
+            <div class="vs-card flex-1" style="border-color:rgba(0,230,138,0.25);">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-accent text-sm">WorkGrid</p><p class="text-[11px] text-gray-600">All-in-one workspace</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-accent font-semibold uppercase tracking-wider mb-2">Why we win here</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>CRM + tasks + invoicing + HR — HubSpot can't touch this combo</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>$0 during early access vs. HubSpot's $20–$500+/mo</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Setup in 2 minutes, not 2 weeks</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Role-based access that actually isolates modules</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider mb-2">Honest caveat</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>No marketing automation (yet) — if email sequences are your core need, HubSpot still wins there</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Smaller integration ecosystem (growing)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rv d2 text-center">
+            <span class="vs-badge good text-xs"><i class="fa-solid fa-arrow-right text-[9px]"></i> WorkGrid wins if: you need CRM + tasks + invoicing + HR without enterprise pricing</span>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== VS MONDAY ===== -->
+<section id="vs-monday" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <div class="inline-flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-dark-600 flex items-center justify-center"><i class="fa-solid fa-circle-check text-purple-500 text-lg"></i></div>
+                <span class="text-gray-600 font-display font-bold text-xl">VS</span>
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-lg"></i></div>
+            </div>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">WorkGrid vs. Monday.com</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">Monday is a beautiful task management tool. The problem? It's ONLY a task management tool. The moment you need CRM, invoicing, or HR — you're shopping again.</p>
+        </div>
+        <div class="rv vs-layout flex items-stretch gap-4 mb-10" style="display:flex;">
+            <div class="vs-card flex-1">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-dark-500 flex items-center justify-center"><i class="fa-solid fa-circle-check text-purple-500 text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-white text-sm">Monday.com</p><p class="text-[11px] text-gray-600">Work OS platform</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-purple-400 font-semibold uppercase tracking-wider mb-2">What they do well</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-purple-400 text-[10px] mt-1.5"></i>Gorgeous, highly customizable board views</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-purple-400 text-[10px] mt-1.5"></i>Great automations within boards</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-purple-400 text-[10px] mt-1.5"></i>Strong team collaboration features</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-purple-400 text-[10px] mt-1.5"></i>200+ integrations available</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-red-400 font-semibold uppercase tracking-wider mb-2">Where they fall short</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No real CRM/deal pipeline — their "CRM" template is just a board</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Zero invoicing capabilities</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No HR module — not even a basic one</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>$9+/user/mo and you still need 3+ other tools</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Free tier limited to 2 seats and 3 boards</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="vs-sep self-center">VS</div>
+            <div class="vs-card flex-1" style="border-color:rgba(0,230,138,0.25);">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-accent text-sm">WorkGrid</p><p class="text-[11px] text-gray-600">All-in-one workspace</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-accent font-semibold uppercase tracking-wider mb-2">Why we win here</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Same board views PLUS deal pipeline, invoicing, and HR</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>One tool replaces Monday + Stripe + HR software + CRM</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>$0 vs. $9+/user — and you get 4x the functionality</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>No seat limits during early access</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider mb-2">Honest caveat</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Monday has more view types (Gantt, timeline) at launch</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Monday's board automations are more mature</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rv d2 text-center"><span class="vs-badge good text-xs"><i class="fa-solid fa-arrow-right text-[9px]"></i> WorkGrid wins if: you need more than just task boards</span></div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== VS CLICKUP ===== -->
+<section id="vs-clickup" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <div class="inline-flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-dark-600 flex items-center justify-center"><i class="fa-solid fa-bolt text-blue-400 text-lg"></i></div>
+                <span class="text-gray-600 font-display font-bold text-xl">VS</span>
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-lg"></i></div>
+            </div>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">WorkGrid vs. ClickUp</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">ClickUp tries to be everything. The result? A tool so packed with features that teams spend more time learning it than using it. And it still doesn't have invoicing or HR.</p>
+        </div>
+        <div class="rv vs-layout flex items-stretch gap-4 mb-10" style="display:flex;">
+            <div class="vs-card flex-1">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-dark-500 flex items-center justify-center"><i class="fa-solid fa-bolt text-blue-400 text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-white text-sm">ClickUp</p><p class="text-[11px] text-gray-600">One app to rule them all?</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-blue-400 font-semibold uppercase tracking-wider mb-2">What they do well</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-blue-400 text-[10px] mt-1.5"></i>Insane number of features — docs, whiteboards, goals, time tracking</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-blue-400 text-[10px] mt-1.5"></i>Very flexible view system (list, board, Gantt, timeline, calendar)</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-blue-400 text-[10px] mt-1.5"></i>Generous free tier for personal use</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-red-400 font-semibold uppercase tracking-wider mb-2">Where they fall short</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>UI is overwhelming — new users get analysis paralysis</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No invoicing — at any price tier</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No HR module — at any price tier</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>"CRM" is just a custom view — no real pipeline logic</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Onboarding takes days — teams resist adoption</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Performance can lag with large workspaces</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="vs-sep self-center">VS</div>
+            <div class="vs-card flex-1" style="border-color:rgba(0,230,138,0.25);">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-accent text-sm">WorkGrid</p><p class="text-[11px] text-gray-600">Focused all-in-one</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-accent font-semibold uppercase tracking-wider mb-2">Why we win here</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Focused feature set — powerful but not paralyzing</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Has invoicing and HR — the two things ClickUp is missing</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Real deal pipeline, not a dressed-up task board</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Teams actually adopt it — 2-minute onboarding</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider mb-2">Honest caveat</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>No built-in docs, whiteboards, or time tracking (yet)</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Fewer view types than ClickUp</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rv d2 text-center"><span class="vs-badge good text-xs"><i class="fa-solid fa-arrow-right text-[9px]"></i> WorkGrid wins if: you value adoption speed and having invoicing/HR built in</span></div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== VS NOTION ===== -->
+<section id="vs-notion" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <div class="inline-flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-dark-600 flex items-center justify-center"><i class="fa-solid fa-n text-gray-400 text-lg"></i></div>
+                <span class="text-gray-600 font-display font-bold text-xl">VS</span>
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-lg"></i></div>
+            </div>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">WorkGrid vs. Notion</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">Notion is an incredible knowledge base. Using it as a CRM is like using a spreadsheet as a database — technically possible, practically painful.</p>
+        </div>
+        <div class="rv vs-layout flex items-stretch gap-4 mb-10" style="display:flex;">
+            <div class="vs-card flex-1">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-dark-500 flex items-center justify-center"><i class="fa-solid fa-n text-gray-400 text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-white text-sm">Notion</p><p class="text-[11px] text-gray-600">All-in-one workspace (for docs)</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-2">What they do well</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-gray-400 text-[10px] mt-1.5"></i>Best-in-class docs and wikis</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-gray-400 text-[10px] mt-1.5"></i>Incredibly flexible — build anything with databases</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-gray-400 text-[10px] mt-1.5"></i>Generous free tier</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-gray-400 text-[10px] mt-1.5"></i>Beautiful templates community</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-red-400 font-semibold uppercase tracking-wider mb-2">Where they fall short as a CRM</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No real CRM — you're building one from databases (DIY)</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No drag-and-drop pipeline — just table views</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Zero invoicing — not even close</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Zero HR — you're back to Google Sheets</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No role-based access control</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Sync issues with large teams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="vs-sep self-center">VS</div>
+            <div class="vs-card flex-1" style="border-color:rgba(0,230,138,0.25);">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-accent text-sm">WorkGrid</p><p class="text-[11px] text-gray-600">Purpose-built workspace</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-accent font-semibold uppercase tracking-wider mb-2">Why we win here</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Real CRM with pipeline — not a DIY database project</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Invoicing built in — no "connect Stripe to Notion" hacks</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>HR portal with actual role isolation</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Kanban boards that work like Kanban, not filtered tables</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider mb-2">Honest caveat</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Notion is still better for docs/wikis — use it alongside WorkGrid</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Less flexible for building custom database structures</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rv d2 text-center"><span class="vs-badge good text-xs"><i class="fa-solid fa-arrow-right text-[9px]"></i> WorkGrid wins if: you need actual business tools, not a blank canvas</span></div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== VS SALESFORCE ===== -->
+<section id="vs-salesforce" class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <div class="inline-flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-2xl bg-dark-600 flex items-center justify-center"><i class="fa-solid fa-cloud text-sky-400 text-lg"></i></div>
+                <span class="text-gray-600 font-display font-bold text-xl">VS</span>
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-lg"></i></div>
+            </div>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">WorkGrid vs. Salesforce</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">Salesforce is the enterprise standard. If you have a 200-person sales team and a six-figure CRM budget, it's great. For everyone else — it's enterprise overkill.</p>
+        </div>
+        <div class="rv vs-layout flex items-stretch gap-4 mb-10" style="display:flex;">
+            <div class="vs-card flex-1">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-dark-500 flex items-center justify-center"><i class="fa-solid fa-cloud text-sky-400 text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-white text-sm">Salesforce</p><p class="text-[11px] text-gray-600">Enterprise CRM giant</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-sky-400 font-semibold uppercase tracking-wider mb-2">What they do well</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-sky-400 text-[10px] mt-1.5"></i>Unmatched enterprise CRM capabilities</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-sky-400 text-[10px] mt-1.5"></i>Massive AppExchange ecosystem</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-sky-400 text-[10px] mt-1.5"></i>Deep customization via Apex/Flows</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-sky-400 text-[10px] mt-1.5"></i>Industry-specific solutions (healthcare, finance, etc.)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-red-400 font-semibold uppercase tracking-wider mb-2">Where they fall short for small teams</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>$25–$300+/user/mo — budget-destroying for small teams</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Requires certified admin to set up properly</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No built-in task management — you need a separate tool</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>No invoicing or HR natively</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Interface feels like a 2010 enterprise app</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-xmark text-red-400 text-[10px] mt-1.5"></i>Onboarding takes weeks to months</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="vs-sep self-center">VS</div>
+            <div class="vs-card flex-1" style="border-color:rgba(0,230,138,0.25);">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-9 h-9 rounded-xl bg-accent-dim flex items-center justify-center"><i class="fa-solid fa-bolt text-accent text-sm"></i></div>
+                    <div><p class="font-display font-semibold text-accent text-sm">WorkGrid</p><p class="text-[11px] text-gray-600">The anti-enterprise CRM</p></div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-accent font-semibold uppercase tracking-wider mb-2">Why we win here</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>$0 vs. $25–$300+/user — save thousands per year</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>No admin needed — anyone can set it up</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Tasks + CRM + invoicing + HR in one — Salesforce needs 4+ tools for this</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-400"><i class="fa-solid fa-check text-accent text-[10px] mt-1.5"></i>Modern UI your team will actually enjoy using</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider mb-2">Honest caveat</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>Not built for 200+ person enterprise sales teams (yet)</li>
+                            <li class="flex items-start gap-2 text-sm text-gray-500"><i class="fa-solid fa-minus text-gray-600 text-[10px] mt-1.5"></i>No Apex-level customization or complex workflow automation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rv d2 text-center"><span class="vs-badge good text-xs"><i class="fa-solid fa-arrow-right text-[9px]"></i> WorkGrid wins if: you're not enterprise and don't want to pay enterprise prices</span></div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== FULL COMPARISON MATRIX ===== -->
+<section class="py-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <p class="text-accent text-sm font-semibold tracking-wider uppercase mb-3">Full Matrix</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">The complete comparison table</h2>
+            <p class="text-gray-400">Every feature, every competitor, no cherry-picking.</p>
+        </div>
+        <div class="rv fs overflow-x-auto rounded-2xl border border-dark-400">
+            <table class="mx">
+                <thead>
+                    <tr>
+                        <th class="text-left text-gray-400" style="min-width:180px;">Feature</th>
+                        <th class="text-orange-400">HubSpot</th>
+                        <th class="text-purple-400">Monday</th>
+                        <th class="text-blue-400">ClickUp</th>
+                        <th class="text-gray-400">Notion</th>
+                        <th class="text-sky-400">Salesforce</th>
+                        <th class="text-accent" style="background:rgba(0,230,138,0.04);">WorkGrid</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="cat-row"><td colspan="7">Task Management</td></tr>
+                    <tr><td>Kanban Boards</td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>List View</td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Calendar View</td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Gantt / Timeline</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-xmark xr"></i></td></tr>
+                    <tr class="cat-row"><td colspan="7">CRM & Sales</td></tr>
+                    <tr><td>Deal Pipeline</td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-check ck"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Contact Profiles</td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-check ck"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Value Forecasting</td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-check ck"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Win/Loss Tracking</td><td><i class="fa-solid fa-check ck"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-check ck"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr class="cat-row"><td colspan="7">Finance</td></tr>
+                    <tr><td>Invoicing</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Payment Tracking</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Revenue Reports</td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-check ck"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr class="cat-row"><td colspan="7">HR</td></tr>
+                    <tr><td>Employee Directory</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Leave Management</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Attendance</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr class="cat-row"><td colspan="7">Security & Access</td></tr>
+                    <tr><td>Role-Based Access</td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-check ck"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr><td>Module Isolation</td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-xmark xr"></i></td><td><i class="fa-solid fa-minus pt"></i></td><td class="wg-col"><i class="fa-solid fa-check ck"></i></td></tr>
+                    <tr class="cat-row"><td colspan="7">Practical</td></tr>
+                    <tr><td>Setup Time</td><td class="text-gray-500">Days</td><td class="text-gray-500">Hours</td><td class="text-gray-500">Hours</td><td class="text-gray-500">Minutes</td><td class="text-gray-500">Weeks</td><td class="wg-col text-accent font-medium">2 min</td></tr>
+                    <tr><td>Free Tier</td><td class="text-gray-500">Limited</td><td class="text-gray-500">Limited</td><td class="text-gray-500">Good</td><td class="text-gray-500">Good</td><td class="text-gray-500">Trial only</td><td class="wg-col text-accent font-medium">Full access</td></tr>
+                    <tr><td>Price/user/mo</td><td class="text-gray-500">$20–$500+</td><td class="text-gray-500">$9–$19</td><td class="text-gray-500">$7–$12</td><td class="text-gray-500">$8–$15</td><td class="text-gray-500">$25–$300+</td><td class="wg-col text-accent font-medium">$0 (now)</td></tr>
+                    <tr><td>Learning Curve</td><td class="text-gray-500">Steep</td><td class="text-gray-500">Medium</td><td class="text-gray-500">Steep</td><td class="text-gray-500">Medium</td><td class="text-gray-500">Very steep</td><td class="wg-col text-accent font-medium">Minimal</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== 切换成本计算器 ===== -->
+<section class="py-20">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <p class="text-warm text-sm font-semibold tracking-wider uppercase mb-3">Switching Cost</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">How much are you overpaying right now?</h2>
+            <p class="text-gray-400">Calculate what you're spending on your current stack vs. what WorkGrid costs.</p>
+        </div>
+        <div class="rv fs vs-card" style="border-color:rgba(255,120,73,0.2);">
+            <div class="grid sm:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <label class="text-sm text-gray-400 mb-3 block">Current CRM cost per user/mo ($)</label>
+                    <input type="range" id="sC" class="cs" min="0" max="200" value="25">
+                    <div class="text-center mt-2 font-display font-bold text-white text-2xl" id="sCV">$25</div>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 mb-3 block">Additional tools you pay for (invoicing, HR, etc.)</label>
+                    <input type="range" id="sA" class="cs" min="0" max="500" value="80" step="10">
+                    <div class="text-center mt-2 font-display font-bold text-white text-2xl" id="sAV">$80</div>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 mb-3 block">Team size</label>
+                    <input type="range" id="sT" class="cs" min="1" max="50" value="8">
+                    <div class="text-center mt-2 font-display font-bold text-white text-2xl" id="sTV">8</div>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-400 mb-3 block">Hours spent managing tools per week (whole team)</label>
+                    <input type="range" id="sH" class="cs" min="0" max="40" value="10">
+                    <div class="text-center mt-2 font-display font-bold text-white text-2xl" id="sHV">10h</div>
+                </div>
+            </div>
+            <div class="border-t border-dark-400 pt-8 grid sm:grid-cols-3 gap-6 text-center">
+                <div><p class="text-xs text-gray-500 uppercase tracking-wider mb-1">You're paying / year</p><p class="font-display text-3xl font-bold" style="color:var(--warm);" id="sPay">$9,840</p></div>
+                <div><p class="text-xs text-gray-500 uppercase tracking-wider mb-1">WorkGrid costs / year</p><p class="font-display text-3xl font-bold text-accent" id="sWG">$0</p></div>
+                <div><p class="text-xs text-gray-500 uppercase tracking-wider mb-1">You'd save / year</p><p class="font-display text-3xl font-bold gt" id="sSave">$9,840</p></div>
+            </div>
+            <p class="text-xs text-gray-600 text-center mt-5">* Doesn't include time savings from tool-switching. Add ~$15K–$50K in recovered productivity for most teams.</p>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-6xl mx-auto px-6"><div class="feat-divider"></div></div>
+
+<!-- ===== WHY PEOPLE SWITCH ===== -->
+<section class="py-20">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <p class="text-accent text-sm font-semibold tracking-wider uppercase mb-3">Real Reasons</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-3">Why people actually switch</h2>
+            <p class="text-gray-400">Not marketing copy — these are the patterns we hear from every team that moves to WorkGrid.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+            <div class="rv leave-card" style="--lc:#FF5252;">
+                <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#FF5252;border-radius:3px 0 0 3px;"></div>
+                <div class="pl-3">
+                    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#FF5252;">From HubSpot</p>
+                    <p class="text-sm text-gray-400 leading-relaxed">"We were paying $600/mo for 5 users and only using 30% of the features. The other 70% was noise we couldn't turn off."</p>
+                </div>
+            </div>
+            <div class="rv d1 leave-card">
+                <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#A78BFA;border-radius:3px 0 0 3px;"></div>
+                <div class="pl-3">
+                    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#A78BFA;">From Monday.com</p>
+                    <p class="text-sm text-gray-400 leading-relaxed">"Monday was great for tasks. But then we needed deals, invoices, and HR. We ended up with Monday + Stripe + a Google Sheet. Defeats the purpose."</p>
+                </div>
+            </div>
+            <div class="rv d2 leave-card">
+                <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#60A5FA;border-radius:3px 0 0 3px;"></div>
+                <div class="pl-3">
+                    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#60A5FA;">From ClickUp</p>
+                    <p class="text-sm text-gray-400 leading-relaxed">"My team literally refused to use it. Too many buttons, too many views, too many 'where do I click to do X?' moments. Adoption was zero."</p>
+                </div>
+            </div>
+            <div class="rv d3 leave-card">
+                <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#6B7280;border-radius:3px 0 0 3px;"></div>
+                <div class="pl-3">
+                    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#6B7280;">From Notion</p>
+                    <p class="text-sm text-gray-400 leading-relaxed">"We spent 3 weeks building a 'CRM' in Notion. It worked... until we needed invoicing. Then we needed HR. Then the whole thing collapsed under its own weight."</p>
+                </div>
+            </div>
+            <div class="rv d4 leave-card sm:col-span-2">
+                <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#38BDF8;border-radius:3px 0 0 3px;"></div>
+                <div class="pl-3">
+                    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:#38BDF8;">From Salesforce</p>
+                    <p class="text-sm text-gray-400 leading-relaxed">"We hired a Salesforce consultant for $5K to set up a basic pipeline for our 12-person team. That's when we knew something was deeply wrong. Switched to WorkGrid in an afternoon."</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 底部 CTA ===== -->
+<section class="relative py-24 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.04);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <h2 class="rv font-display text-3xl sm:text-4xl font-bold text-white mb-5">The math is simple. <span class="gt">Try it free.</span></h2>
+        <p class="rv d1 text-gray-400 mb-8 max-w-lg mx-auto">Every competitor on this page costs more and does less for small teams. WorkGrid is free during early access. You have nothing to lose.</p>
+        <div class="rv d2 flex flex-wrap gap-4 justify-center">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free Now <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="features.html" class="bs">Explore Features</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="border-t border-dark-400 py-14 bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
+            <div class="lg:col-span-2">
+                <a href="index.html" class="flex items-center gap-2.5 mb-4">
+                    <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+                    <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xs mb-5">The all-in-one workspace that combines tasks, CRM, invoicing, and HR.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li><li><a href="contact.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li></ul></div>
+        </div>
+        <div class="border-t border-dark-400 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-600">2026 WorkGrid. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with frustration and caffeine.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('nav-scrolled',scrollY>40);});
+const mm=document.getElementById('mobMenu');
+document.getElementById('mobBtn').onclick=()=>mm.classList.add('open');
+document.getElementById('mobClose').onclick=()=>mm.classList.remove('open');
+document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('open'));
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// 切换成本计算器
+const sC=document.getElementById('sC'),sA=document.getElementById('sA'),sT=document.getElementById('sT'),sH=document.getElementById('sH');
+const sCV=document.getElementById('sCV'),sAV=document.getElementById('sAV'),sTV=document.getElementById('sTV'),sHV=document.getElementById('sHV');
+const sPay=document.getElementById('sPay'),sWG=document.getElementById('sWG'),sSave=document.getElementById('sSave');
+function uS(){
+    const c=+sC.value,a=+sA.value,t=+sT.value,h=+sH.value;
+    sCV.textContent='$'+c;sAV.textContent='$'+a;sTV.textContent=t;sHV.textContent=h+'h';
+    const yearly=(c*t*12)+a*12;
+    sPay.textContent='$'+yearly.toLocaleString();
+    sWG.textContent='$0';
+    sSave.textContent='$'+yearly.toLocaleString();
+}
+sC.oninput=uS;sA.oninput=uS;sT.oninput=uS;sH.oninput=uS;uS();
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+</script>
+</body>
+</html>

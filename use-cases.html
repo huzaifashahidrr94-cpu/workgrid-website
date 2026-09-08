@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Cases — WorkGrid for Freelancers, Agencies, Startups, Remote Teams</title>
+    <meta name="description" content="See how WorkGrid works for freelancers, agencies, startups, and remote teams. Real workflows, real pain points, real solutions.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { display:['Space Grotesk','sans-serif'], body:['DM Sans','sans-serif'] },
+                    colors: {
+                        dark:{950:'#05060A',900:'#08090D',800:'#0E1017',700:'#12141C',600:'#1A1D28',500:'#222532',400:'#2A2D3A',300:'#3A3E50'},
+                        accent:{DEFAULT:'#00E68A',dim:'rgba(0,230,138,0.08)',mid:'rgba(0,230,138,0.2)'},
+                        warm:{DEFAULT:'#FF7849',dim:'rgba(255,120,73,0.1)'},
+                        cyan:{DEFAULT:'#00B8D4',dim:'rgba(0,184,212,0.1)'},
+                        violet:{DEFAULT:'#A78BFA',dim:'rgba(167,139,250,0.1)'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root{--accent:#00E68A;--warm:#FF7849;--bg:#08090D;--card:#1A1D28;--border:#2A2D3A;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E4E4E9;overflow-x:hidden;}
+        h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0E1017;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:3px;}
+        .wgA{color:var(--accent);}.bA{background:rgba(0,230,138,0.08);border-color:rgba(0,230,138,0.2);}
+        .wG{color:var(--warm);}.bW{background:rgba(255,120,73,0.08);border-color:rgba(255,120,73,0.2);}
+        .cN{color:#00B8D4;}.bC{background:rgba(0,184,212,0.08);border-color:rgba(0,184,212,0.2);}
+        .vT{color:#A78BFA;}.bV{background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.2);}
+        .wg-logo{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;width:28px;height:28px;}
+        .wg-logo span{border-radius:3px;}.wg-logo .on{background:var(--accent);}.wg-logo .off{background:rgba(255,255,255,0.08);}.wg-logo .warm{background:var(--warm);}
+        .glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+        .gt{background:linear-gradient(135deg,#00E68A,#00B8D4,#00E68A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .nav-scrolled{background:rgba(8,9,13,0.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid rgba(42,45,58,0.5)!important;}
+
+        .rv{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s cubic-bezier(.25,.46,.45,.94);}
+        .rv.fl{transform:translateX(-32px) translateY(0);}
+        .rv.fr{transform:translateX(32px) translateY(0);}
+        .rv.fs{transform:scale(.94);}
+        .rv.on{opacity:1;transform:translate(0) scale(1);}
+        .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}
+
+        /* 人物卡片选择器 */
+        .persona-btn{padding:14px 24px;border-radius:14px;font-size:14px;font-weight:600;border:1px solid var(--border);background:transparent;color:#6B7280;cursor:pointer;transition:all .3s;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden;}
+        .persona-btn::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:14px;}
+        .persona-btn:hover{color:#E4E4E9;border-color:#3A3E50;}
+        .persona-btn.active{border-color:transparent;}
+        .persona-btn.active::before{opacity:1;}
+        .persona-btn[data-p="freelance"].active{color:var(--accent);border-color:rgba(0,230,138,0.3);}
+        .persona-btn[data-p="freelance"]::before{background:rgba(0,230,138,0.06);}
+        .persona-btn[data-p="agency"].active{color:var(--warm);border-color:rgba(255,120,73,0.3);}
+        .persona-btn[data-p="agency"]::before{background:rgba(255,120,73,0.06);}
+        .persona-btn[data-p="startup"].active{color:#00B8D4;border-color:rgba(0,184,212,0.3);}
+        .persona-btn[data-p="startup"]::before{background:rgba(0,184,212,0.06);}
+        .persona-btn[data-p="remote"].active{color:#A78BFA;border-color:rgba(167,139,250,0.3);}
+        .persona-btn[data-p="remote"]::before{background:rgba(167,139,250,0.06);}
+
+        /* 人物区块 */
+        .persona-section{display:none;}
+        .persona-section.visible{display:block;}
+
+        /* 痛点卡 */
+        .pain-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all .3s;}
+        .pain-card:hover{transform:translateY(-2px);border-color:#3A3E50;}
+
+        /* 解决方案卡 */
+        .sol-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .3s;position:relative;overflow:hidden;}
+        .sol-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .3s;}
+        .sol-card:hover{transform:translateY(-3px);}
+        .sol-card:hover::before{opacity:1;}
+
+        /* 工作流步骤 */
+        .wf-step{display:flex;gap:16px;position:relative;}
+        .wf-step::before{content:'';position:absolute;left:19px;top:44px;bottom:-8px;width:2px;background:var(--border);}
+        .wf-step:last-child::before{display:none;}
+        .wf-num{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;flex-shrink:0;position:relative;z-index:1;}
+
+        /* 引用 */
+        .use-quote{position:relative;padding:24px 24px 24px 40px;border-radius:0 14px 14px 0;}
+        .use-quote::before{content:'\201C';position:absolute;top:10px;left:12px;font-size:42px;font-family:Georgia,serif;line-height:1;opacity:.25;}
+
+        /* 功能标签 */
+        .feat-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:500;border:1px solid var(--border);background:rgba(255,255,255,0.02);}
+
+        .feat-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);}
+
+        .bp{background:var(--accent);color:#08090D;font-weight:600;border:none;padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bp:hover{background:#00cc7a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,230,138,0.22);}
+        .bs{background:transparent;color:#E4E4E9;font-weight:500;border:1px solid var(--border);padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bs:hover{border-color:#3A3E50;background:rgba(255,255,255,0.025);}
+
+        .mm{position:fixed;inset:0;background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .3s;}
+        .mm.open{opacity:1;pointer-events:all;}
+
+        @media(max-width:768px){
+            .persona-btn{padding:10px 16px;font-size:12px;gap:6px;}
+            .wf-step::before{left:15px;}
+        }
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.rv{opacity:1;transform:none;}}
+    </style>
+</head>
+<body>
+
+<!-- ===== 导航栏 ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+            <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="features.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+            <a href="use-cases.html" class="text-sm text-accent font-medium">Use Cases</a>
+            <a href="pricing.html" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="compare.html" class="text-sm text-gray-400 hover:text-white transition-colors">Compare</a>
+            <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+        </div>
+        <div class="hidden lg:flex items-center gap-3">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+        </div>
+        <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+</nav>
+<div id="mobMenu" class="mm">
+    <button id="mobClose" class="absolute top-5 right-6 text-white text-2xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <a href="index.html" class="text-xl text-gray-300 hover:text-white ml">Home</a>
+    <a href="features.html" class="text-xl text-gray-300 hover:text-white ml">Features</a>
+    <a href="use-cases.html" class="text-xl text-accent ml">Use Cases</a>
+    <a href="pricing.html" class="text-xl text-gray-300 hover:text-white ml">Pricing</a>
+    <a href="compare.html" class="text-xl text-gray-300 hover:text-white ml">Compare</a>
+    <a href="about.html" class="text-xl text-gray-300 hover:text-white ml">About</a>
+    <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp mt-4">Sign Up Free</a>
+</div>
+
+<!-- ===== Hero ===== -->
+<section class="relative pt-28 pb-12 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.03);top:-100px;left:50%;transform:translateX(-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <div class="rv inline-flex items-center gap-2 bg-accent-dim border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+            <i class="fa-solid fa-users text-accent text-xs"></i>
+            <span class="text-xs font-medium text-accent">Solutions for every team size</span>
+        </div>
+        <h1 class="rv d1 font-display text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-6">
+            WorkGrid works the way <span class="gt">you</span> work
+        </h1>
+        <p class="rv d2 text-lg text-gray-400 leading-relaxed max-w-xl mx-auto">
+            Same workspace, different workflows. Whether you're solo or scaling, WorkGrid adapts to how your team actually operates — not the other way around.
+        </p>
+    </div>
+</section>
+
+<!-- ===== 人物选择器 ===== -->
+<section class="py-8">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="rv flex flex-wrap justify-center gap-3" id="personaNav">
+            <button class="persona-btn active" data-p="freelance" onclick="showPersona('freelance')">
+                <i class="fa-solid fa-laptop-code"></i> Freelancers
+            </button>
+            <button class="persona-btn" data-p="agency" onclick="showPersona('agency')">
+                <i class="fa-solid fa-building"></i> Agencies
+            </button>
+            <button class="persona-btn" data-p="startup" onclick="showPersona('startup')">
+                <i class="fa-solid fa-rocket"></i> Startups
+            </button>
+            <button class="persona-btn" data-p="remote" onclick="showPersona('remote')">
+                <i class="fa-solid fa-globe"></i> Remote Teams
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- ===== FREELANCER SECTION ===== -->
+<!-- ====================================================== -->
+<div class="persona-section visible" id="sec-freelance">
+<section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+        <!-- Header -->
+        <div class="rv grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-accent-dim border border-accent/20 rounded-full px-4 py-1.5 mb-4">
+                    <i class="fa-solid fa-laptop-code text-accent text-xs"></i>
+                    <span class="text-xs font-medium text-accent">For Freelancers</span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">One person. One workspace. Zero chaos.</h2>
+                <p class="text-gray-400 leading-relaxed">You're the CEO, the project manager, the accountant, and the delivery team. You don't need a tool for each role — you need one tool that handles all of them.</p>
+            </div>
+            <div class="rv d1 relative">
+                <div class="w-48 h-48 rounded-3xl overflow-hidden border-2 border-dark-400 mx-auto" style="aspect-ratio:1;">
+                    <img src="https://picsum.photos/seed/wg-freelancer/400/400.jpg" alt="Freelancer" class="w-full h-full object-cover">
+                </div>
+                <div class="glow-orb" style="width:300px;height:300px;background:rgba(0,230,138,0.06);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+            </div>
+        </div>
+
+        <!-- The Struggle -->
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">The struggle you know too well</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv pain-card">
+                    <i class="fa-solid fa-money-bill-wave text-warm text-lg mb-3"></i>
+                    <p class="text-white text-sm font-medium mb-1">Invoicing is a nightmare</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">You finish the work, then spend 30 minutes in Stripe or FreshBooks creating an invoice, copying line items, and chasing payments.</p>
+                </div>
+                <div class="rv d1 pain-card">
+                    <i class="fa-solid fa-flask text-warm text-lg mb-3"></i>
+                    <p class="text-white text-sm font-medium mb-1">Client info scattered everywhere</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">Emails, spreadsheets, Notion pages, sticky notes. You can't remember which client is on which phase without digging.</p>
+                </div>
+                <div class="rv d2 pain-card">
+                    <i class="fa-solid fa-repeat text-warm text-lg mb-3"></i>
+                    <p class="text-white text-sm font-medium mb-1">Context switching kills flow</p>
+                    <p class="text-xs text-gray-500 leading-relaxed">Task board for tasks. Email for clients. Stripe for invoices. Each switch costs 15 minutes of refocus time.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How WorkGrid Helps -->
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">How WorkGrid changes your day</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="rv sol-card" style="border-color:rgba(0,230,138,0.15);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);"></div>
+                    <div class="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center mb-4"><i class="fa-solid fa-file-invoice-dollar text-accent"></i></div>
+                    <h4 class="font-display font-semibold text-white mb-2">Invoice from the same place you work</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Finish a task, click "Create Invoice," done. Line items auto-fill from your project. Send it, track it, all without leaving WorkGrid.</p>
+                </div>
+                <div class="rv d1 sol-card" style="border-color:rgba(0,230,138,0.15);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);"></div>
+                    <div class="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center mb-4"><i class="fa-solid fa-address-book text-accent"></i></div>
+                    <h4 class="font-display font-semibold text-white mb-2">Client profiles with full history</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Every client gets a profile: tasks done, invoices sent, deals in progress. No more digging through email threads.</p>
+                </div>
+                <div class="rv d2 sol-card" style="border-color:rgba(0,230,138,0.15);">
+                    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);"></div>
+                    <div class="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center mb-4"><i class="fa-solid fa-arrows-to-dot text-accent"></i></div>
+                    <h4 class="font-display font-semibold text-white mb-2">Zero context switching</h4>
+                    <p class="text-sm text-gray-500 leading-relaxed">Tasks, deals, invoices, and client info all in one screen. Your brain stays in one mode: getting work done.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day in the Life -->
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-8">A day in your WorkGrid life</h3>
+            <div class="rv max-w-2xl space-y-6">
+                <div class="wf-step">
+                    <div class="wf-num bg-accent-dim text-accent border border-accent/20">1</div>
+                    <div><p class="text-white font-medium mb-1">Open your workspace</p><p class="text-sm text-gray-500">Dashboard shows: 3 tasks due today, 1 invoice overdue, 2 deals waiting for response. Everything at a glance.</p></div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num bg-accent-dim text-accent border border-accent/20">2</div>
+                    <div><p class="text-white font-medium mb-1">Work on tasks</p><p class="text-sm text-gray-500">Move cards through your Kanban board. Attach files, add notes, mark done when finished.</p></div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num bg-accent-dim text-accent border border-accent/20">3</div>
+                    <div><p class="text-white font-medium mb-1">Invoice the client</p><p class="text-sm text-gray-500">Click "Invoice" on the completed task. Line items pre-fill. Send it in 30 seconds. Status auto-updates.</p></div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num bg-accent-dim text-accent border border-accent/20">4</div>
+                    <div><p class="text-white font-medium mb-1">Move the deal forward</p><p class="text-sm text-gray-500">Client wants more work? Drag the deal to "Proposal Sent" in your pipeline. Set a follow-up date. Done.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote -->
+        <div class="rv use-quote border-l-3" style="border-left:3px solid var(--accent);background:rgba(0,230,138,0.02);">
+            <p class="text-white font-medium text-lg leading-relaxed mb-3">"I used to spend my evenings doing admin — invoicing in Stripe, updating client notes in Notion, tracking deals in a spreadsheet. Now I do all of it in 10 minutes inside WorkGrid and actually log off on time."</p>
+            <div class="flex items-center gap-3"><img src="https://picsum.photos/seed/wg-fl-maya/60/60.jpg" alt="Maya" class="w-8 h-8 rounded-full object-cover"><div><p class="text-white text-sm font-medium">Maya Chen</p><p class="text-xs text-gray-500">Freelance Designer — 6 clients, 1 workspace</p></div></div>
+        </div>
+
+        <!-- CTA -->
+        <div class="rv mt-12 text-center">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free as a Freelancer <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+</div>
+
+<!-- ====================================================== -->
+<!-- ===== AGENCY SECTION ===== -->
+<!-- ====================================================== -->
+<div class="persona-section" id="sec-agency">
+<section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-warm-dim border border-warm/20 rounded-full px-4 py-1.5 mb-4">
+                    <i class="fa-solid fa-building text-warm text-xs"></i>
+                    <span class="text-xs font-medium text-warm">For Agencies</span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Multiple clients. Multiple teams. One source of truth.</h2>
+                <p class="text-gray-400 leading-relaxed">Running an agency means juggling projects, clients, invoices, and team capacity — often across the same workday. WorkGrid keeps it all visible without the chaos.</p>
+            </div>
+            <div class="rv d1 relative">
+                <div class="w-48 h-48 rounded-3xl overflow-hidden border-2 border-dark-400 mx-auto"><img src="https://picsum.photos/seed/wg-agency/400/400.jpg" alt="Agency" class="w-full h-full object-cover"></div>
+                <div class="glow-orb" style="width:300px;height:300px;background:rgba(255,120,73,0.05);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">The agency pain points</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv pain-card"><i class="fa-solid fa-users-slash text-warm text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Client work bleeds together</p><p class="text-xs text-gray-500 leading-relaxed">Tasks for Client A sit next to tasks for Client B. One missed label and someone works on the wrong project.</p></div>
+                <div class="rv d1 pain-card"><i class="fa-solid fa-receipt text-warm text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Invoicing is manual and slow</p><p class="text-xs text-gray-500 leading-relaxed">Someone on your team spends hours each month creating invoices, tracking payments, and following up on overdue ones.</p></div>
+                <div class="rv d2 pain-card"><i class="fa-solid fa-eye-slash text-warm text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">No visibility into team capacity</p><p class="text-xs text-gray-500 leading-relaxed">Who's overloaded? Who's idle? You can't tell because task tools don't show workload across projects.</p></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">How WorkGrid solves it</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="rv sol-card" style="border-color:rgba(255,120,73,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--warm);"></div><div class="w-10 h-10 rounded-xl bg-warm-dim flex items-center justify-center mb-4"><i class="fa-solid fa-layer-group text-warm"></i></div><h4 class="font-display font-semibold text-white mb-2">Per-client workspaces</h4><p class="text-sm text-gray-500 leading-relaxed">Organize projects by client. Each client's tasks, deals, and invoices are separate. No cross-contamination.</p></div>
+                <div class="rv d1 sol-card" style="border-color:rgba(255,120,73,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--warm);"></div><div class="w-10 h-10 rounded-xl bg-warm-dim flex items-center justify-center mb-4"><i class="fa-solid fa-file-invoice-dollar text-warm"></i></div><h4 class="font-display font-semibold text-white mb-2">Batch invoicing</h4><p class="text-sm text-gray-500 leading-relaxed">Generate invoices for multiple clients in minutes, not hours. Payment status auto-tracks. Overdue reminders are automatic.</p></div>
+                <div class="rv d2 sol-card" style="border-color:rgba(255,120,73,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--warm);"></div><div class="w-10 h-10 rounded-xl bg-warm-dim flex items-center justify-center mb-4"><i class="fa-solid fa-chart-pie text-warm"></i></div><h4 class="font-display font-semibold text-white mb-2">Team workload view</h4><p class="text-sm text-gray-500 leading-relaxed">See who's working on what, who's at capacity, and who can take more. Assign work based on reality, not guessing.</p></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-8">A day in your agency's WorkGrid life</h3>
+            <div class="rv max-w-2xl space-y-6">
+                <div class="wf-step"><div class="wf-num bg-warm-dim text-warm border border-warm/20">1</div><div><p class="text-white font-medium mb-1">Morning standup — visually</p><p class="text-sm text-gray-500">Dashboard shows all active projects, team workload, and overdue items. No 30-minute meeting needed.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-warm-dim text-warm border border-warm/20">2</div><div><p class="text-white font-medium mb-1">Assign and track</p><p class="text-sm text-gray-500">Move tasks across the board. Assign team members. Set priorities. Everyone sees their queue instantly.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-warm-dim text-warm border border-warm/20">3</div><div><p class="text-white font-medium mb-1">Invoice at project milestones</p><p class="text-sm text-gray-500">Phase 1 done? Generate an invoice. Link it to the project. Client gets it, you track it. No manual copying.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-warm-dim text-warm border border-warm/20">4</div><div><p class="text-white font-medium mb-1">Review pipeline and capacity</p><p class="text-sm text-gray-500">See incoming deals, team availability, and revenue forecasts. Decide if you can take that new client.</p></div></div>
+            </div>
+        </div>
+
+        <div class="rv use-quote" style="border-left:3px solid var(--warm);background:rgba(255,120,73,0.02);">
+            <p class="text-white font-medium text-lg leading-relaxed mb-3">"We had 8 clients and were managing them across Trello, Stripe, and a Google Sheet for capacity planning. WorkGrid replaced all three. Our ops person went from 4 hours of admin a day to 30 minutes."</p>
+            <div class="flex items-center gap-3"><img src="https://picsum.photos/seed/wg-ag-james/60/60.jpg" alt="James" class="w-8 h-8 rounded-full object-cover"><div><p class="text-white text-sm font-medium">James Okoro</p><p class="text-xs text-gray-500">Agency Director — 12 people, 8 clients</p></div></div>
+        </div>
+        <div class="rv mt-12 text-center"><a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free for Your Agency <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+</section>
+</div>
+
+<!-- ====================================================== -->
+<!-- ===== STARTUP SECTION ===== -->
+<!-- ====================================================== -->
+<div class="persona-section" id="sec-startup">
+<section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-cyan-dim border border-cyan/20 rounded-full px-4 py-1.5 mb-4">
+                    <i class="fa-solid fa-rocket text-cyan text-xs"></i>
+                    <span class="text-xs font-medium text-cyan">For Startups</span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Scale from 2 to 50 without switching tools.</h2>
+                <p class="text-gray-400 leading-relaxed">The tool you pick at 3 people shouldn't be the tool you outgrow at 20. WorkGrid is designed to scale with you — same workspace, more power.</p>
+            </div>
+            <div class="rv d1 relative">
+                <div class="w-48 h-48 rounded-3xl overflow-hidden border-2 border-dark-400 mx-auto"><img src="https://picsum.photos/seed/wg-startup/400/400.jpg" alt="Startup" class="w-full h-full object-cover"></div>
+                <div class="glow-orb" style="width:300px;height:300px;background:rgba(0,184,212,0.05);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">Startup growing pains</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv pain-card"><i class="fa-solid fa-bomb text-cyan text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">You outgrow tools fast</p><p class="text-xs text-gray-500 leading-relaxed">That free Trello board was great at 3 people. At 15, it's chaos. But migrating to a "real" CRM takes weeks nobody has.</p></div>
+                <div class="rv d1 pain-card"><i class="fa-solid fa-dollar-sign text-cyan text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Per-user pricing hurts</p><p class="text-xs text-gray-500 leading-relaxed">$12/user/mo sounds fine at 5 people. At 30? That's $4,320/year for ONE tool. Add invoicing and HR software and you're at $10K+.</p></div>
+                <div class="rv d2 pain-card"><i class="fa-solid fa-recycle text-cyan text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Tool churn wastes time</p><p class="text-xs text-gray-500 leading-relaxed">You switch tools every 6 months because you keep outgrowing them. Each switch costs a week of lost productivity.</p></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">How WorkGrid grows with you</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="rv sol-card" style="border-color:rgba(0,184,212,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:#00B8D4;"></div><div class="w-10 h-10 rounded-xl bg-cyan-dim flex items-center justify-center mb-4"><i class="fa-solid fa-expand text-cyan"></i></div><h4 class="font-display font-semibold text-white mb-2">Scales without rebuilds</h4><p class="text-sm text-gray-500 leading-relaxed">Same workspace at 3 people and 50. Add users, add projects, add complexity — no migration needed. Ever.</p></div>
+                <div class="rv d1 sol-card" style="border-color:rgba(0,184,212,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:#00B8D4;"></div><div class="w-10 h-10 rounded-xl bg-cyan-dim flex items-center justify-center mb-4"><i class="fa-solid fa-wallet text-cyan"></i></div><h4 class="font-display font-semibold text-white mb-2">Pricing that doesn't punish growth</h4><p class="text-sm text-gray-500 leading-relaxed">Free during early access. When pricing launches, early users get locked-in rates. Growth doesn't mean a bigger bill.</p></div>
+                <div class="rv d2 sol-card" style="border-color:rgba(0,184,212,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:#00B8D4;"></div><div class="w-10 h-10 rounded-xl bg-cyan-dim flex items-center justify-center mb-4"><i class="fa-solid fa-users-gear text-cyan"></i></div><h4 class="font-display font-semibold text-white mb-2">HR grows with you</h4><p class="text-sm text-gray-500 leading-relaxed">At 5 people, HR is a spreadsheet. At 20, you need real HR tools. WorkGrid's HR portal is there when you need it — already built in.</p></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-8">Your startup's WorkGrid journey</h3>
+            <div class="rv max-w-2xl space-y-6">
+                <div class="wf-step"><div class="wf-num bg-cyan-dim text-cyan border border-cyan/20">1</div><div><p class="text-white font-medium mb-1">Day 1: Set up in 2 minutes</p><p class="text-sm text-gray-500">Create workspace, invite co-founders, create your first board. Start shipping immediately.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-cyan-dim text-cyan border border-cyan/20">2</div><div><p class="text-white font-medium mb-1">Month 1: Add clients and deals</p><p class="text-sm text-gray-500">As you get customers, track them in the deal pipeline. Create invoices. Everything stays connected.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-cyan-dim text-cyan border border-cyan/20">3</div><div><p class="text-white font-medium mb-1">Month 6: Hire your first employees</p><p class="text-sm text-gray-500">HR portal is ready. Employee directory, leave management, attendance. No new tool needed.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-cyan-dim text-cyan border border-cyan/20">4</div><div><p class="text-white font-medium mb-1">Year 1: 30+ people, same workspace</p><p class="text-sm text-gray-500">Role-based access keeps things clean. HR sees HR. Sales sees sales. Everyone sees what they need.</p></div></div>
+            </div>
+        </div>
+
+        <div class="rv use-quote" style="border-left:3px solid #00B8D4;background:rgba(0,184,212,0.02);">
+            <p class="text-white font-medium text-lg leading-relaxed mb-3">"We went from 4 to 22 people in 8 months. Every other startup I know had to migrate their tools twice during that period. We didn't. WorkGrid just... handled it."</p>
+            <div class="flex items-center gap-3"><img src="https://picsum.photos/seed/wg-st-priya/60/60.jpg" alt="Priya" class="w-8 h-8 rounded-full object-cover"><div><p class="text-white text-sm font-medium">Priya Sharma</p><p class="text-xs text-gray-500">Startup COO — Series A, 22 people</p></div></div>
+        </div>
+        <div class="rv mt-12 text-center"><a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free for Your Startup <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+</section>
+</div>
+
+<!-- ====================================================== -->
+<!-- ===== REMOTE TEAMS SECTION ===== -->
+<!-- ====================================================== -->
+<div class="persona-section" id="sec-remote">
+<section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="rv grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-violet-dim border border-violet/20 rounded-full px-4 py-1.5 mb-4">
+                    <i class="fa-solid fa-globe text-violet text-xs"></i>
+                    <span class="text-xs font-medium text-violet">For Remote Teams</span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-4">Aligned across time zones. No 9 AM standups required.</h2>
+                <p class="text-gray-400 leading-relaxed">Remote work fails when nobody knows what's happening. WorkGrid gives your team a shared source of truth that works 24/7 — even when half the team is asleep.</p>
+            </div>
+            <div class="rv d1 relative">
+                <div class="w-48 h-48 rounded-3xl overflow-hidden border-2 border-dark-400 mx-auto"><img src="https://picsum.photos/seed/wg-remote/400/400.jpg" alt="Remote Team" class="w-full h-full object-cover"></div>
+                <div class="glow-orb" style="width:300px;height:300px;background:rgba(167,139,250,0.05);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">The remote team struggles</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv pain-card"><i class="fa-solid fa-magnifying-glass text-violet text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Invisible work</p><p class="text-xs text-gray-500 leading-relaxed">"What's the status on that?" is asked 20 times a day because nobody can see what anyone else is working on.</p></div>
+                <div class="rv d1 pain-card"><i class="fa-solid fa-clock text-violet text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Time zone deadlocks</p><p class="text-xs text-gray-500 leading-relaxed">Someone in London is blocked waiting for a response from someone in San Francisco who won't be online for 8 hours.</p></div>
+                <div class="rv d2 pain-card"><i class="fa-solid fa-link-slash text-violet text-lg mb-3"></i><p class="text-white text-sm font-medium mb-1">Disconnected tools</p><p class="text-xs text-gray-500 leading-relaxed">Slack for chat. Notion for docs. Trello for tasks. Loom for updates. Four tools, four places to check, four things to forget.</p></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-6">How WorkGrid keeps remote teams connected</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="rv sol-card" style="border-color:rgba(167,139,250,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:#A78BFA;"></div><div class="w-10 h-10 rounded-xl bg-violet-dim flex items-center justify-center mb-4"><i class="fa-solid fa-eye text-violet"></i></div><h4 class="font-display font-semibold text-white mb-2">Work is visible by default</h4><p class="text-sm text-gray-500 leading-relaxed">Kanban boards, task assignees, and deal stages are visible to everyone. No "what are you working on?" messages needed.</p></div>
+                <div class="rv d1 sol-card" style="border-color:rgba(167,139,250,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:#A78BFA;"></div><div class="w-10 h-10 rounded-xl bg-violet-dim flex items-center justify-center mb-4"><i class="fa-solid fa-forward text-violet"></i></div><h4 class="font-display font-semibold text-white mb-2">Async-first workflows</h4><p class="text-sm text-gray-500 leading-relaxed">Update tasks, move deals, leave comments — all without needing someone online right now. Work flows 24/7.</p></div>
+                <div class="rv d2 sol-card" style="border-color:rgba(167,139,250,0.15);"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:#A78BFA;"></div><div class="w-10 h-10 rounded-xl bg-violet-dim flex items-center justify-center mb-4"><i class="fa-solid fa-bell text-violet"></i></div><h4 class="font-display font-semibold text-white mb-2">Smart notifications</h4><p class="text-sm text-gray-500 leading-relaxed">Get notified about what matters — tasks assigned to you, deal updates, overdue invoices — not every single change in the workspace.</p></div>
+            </div>
+        </div>
+
+        <div class="mb-16">
+            <h3 class="rv font-display text-xl font-bold text-white mb-8">Your remote team's WorkGrid day</h3>
+            <div class="rv max-w-2xl space-y-6">
+                <div class="wf-step"><div class="wf-num bg-violet-dim text-violet border border-violet/20">1</div><div><p class="text-white font-medium mb-1">9 AM in your time zone (whatever that is)</p><p class="text-sm text-gray-500">Log in. Dashboard shows what happened while you slept — tasks completed, deals moved, comments added. You're caught up in 2 minutes.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-violet-dim text-violet border border-violet/20">2</div><div><p class="text-white font-medium mb-1">Work without waiting</p><p class="text-sm text-gray-500">Move your tasks, add comments, update deal stages. Your teammates will see it when they come online. No sync delays.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-violet-dim text-violet border border-violet/20">3</div><div><p class="text-white font-medium mb-1">Hand off cleanly</p><p class="text-sm text-gray-500">Need someone in another time zone to review? Assign the task, add context in a comment. They'll pick it up on their morning. Zero "can you review this?" Slack pings.</p></div></div>
+                <div class="wf-step"><div class="wf-num bg-violet-dim text-violet border border-violet/20">4</div><div><p class="text-white font-medium mb-1">End of day — log off</p><p class="text-sm text-gray-500">Your board is updated. Your tasks are tracked. Your deals are moving. Tomorrow, you pick up right where you left off. No status report needed.</p></div></div>
+            </div>
+        </div>
+
+        <div class="rv use-quote" style="border-left:3px solid #A78BFA;background:rgba(167,139,250,0.02);">
+            <p class="text-white font-medium text-lg leading-relaxed mb-3">"We're spread across 4 time zones. Before WorkGrid, 'What's the status?' was our most-used Slack message. Now nobody asks — they just look at the board. We canceled our daily standup because it wasn't needed anymore."</p>
+            <div class="flex items-center gap-3"><img src="https://picsum.photos/seed/wg-rt-alex/60/60.jpg" alt="Alex" class="w-8 h-8 rounded-full object-cover"><div><p class="text-white text-sm font-medium">Alex Rivera</p><p class="text-xs text-gray-500">Engineering Lead — 4 time zones, 0 daily standups</p></div></div>
+        </div>
+        <div class="rv mt-12 text-center"><a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free for Your Remote Team <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+</section>
+</div>
+
+<!-- ===== "NOT SURE" SECTION ===== -->
+<section class="relative py-20 overflow-hidden">
+    <div class="glow-orb" style="width:400px;height:400px;background:rgba(0,230,138,0.03);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <h2 class="rv font-display text-2xl sm:text-3xl font-bold text-white mb-4">Don't see yourself here?</h2>
+        <p class="rv d1 text-gray-400 mb-6 max-w-lg mx-auto">WorkGrid is built for any small team that's tired of juggling multiple tools. If you manage tasks, clients, money, or people — you're our people.</p>
+        <div class="rv d2 flex flex-wrap gap-3 justify-center mb-8">
+            <span class="feat-pill"><i class="fa-solid fa-graduation-cap text-gray-600 text-[10px]"></i> Students</span>
+            <span class="feat-pill"><i class="fa-solid fa-shop text-gray-600 text-[10px]"></i> Small Shops</span>
+            <span class="feat-pill"><i class="fa-solid fa-palette text-gray-600 text-[10px]"></i> Creative Studios</span>
+            <span class="feat-pill"><i class="fa-solid fa-code text-gray-600 text-[10px]"></i> Dev Teams</span>
+            <span class="feat-pill"><i class="fa-solid fa-clipboard-list text-gray-600 text-[10px]"></i> Consultants</span>
+            <span class="feat-pill"><i class="fa-solid fa-handshake text-gray-600 text-[10px]"></i> Solo Founders</span>
+            <span class="feat-pill"><i class="fa-solid fa-headset text-gray-600 text-[10px]"></i> Support Teams</span>
+            <span class="feat-pill"><i class="fa-solid fa-house-laptop text-gray-600 text-[10px]"></i> Side Hustlers</span>
+        </div>
+        <div class="rv d3 flex flex-wrap gap-4 justify-center">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Try WorkGrid Free <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="features.html" class="bs">Explore All Features</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="border-t border-dark-400 py-14 bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
+            <div class="lg:col-span-2">
+                <a href="index.html" class="flex items-center gap-2.5 mb-4">
+                    <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+                    <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xs mb-5">The all-in-one workspace that combines tasks, CRM, invoicing, and HR. Built by a solo developer who was tired of bloated tools.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4><ul class="space-y-2.5"><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li><li><a href="contact.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li></ul></div>
+        </div>
+        <div class="border-t border-dark-400 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-600">2026 WorkGrid. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with frustration and caffeine.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('nav-scrolled',scrollY>40);});
+
+const mm=document.getElementById('mobMenu');
+document.getElementById('mobBtn').onclick=()=>mm.classList.add('open');
+document.getElementById('mobClose').onclick=()=>mm.classList.remove('open');
+document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('open'));
+
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// 人物切换
+function showPersona(id){
+    document.querySelectorAll('.persona-section').forEach(s=>s.classList.remove('visible'));
+    document.querySelectorAll('.persona-btn').forEach(b=>b.classList.remove('active'));
+    const sec=document.getElementById('sec-'+id);
+    if(sec){
+        sec.classList.add('visible');
+        // 重新触发该区块内的滚动动画
+        sec.querySelectorAll('.rv').forEach(el=>{el.classList.remove('on');ro.observe(el);});
+    }
+    document.querySelector(`.persona-btn[data-p="${id}"]`).classList.add('active');
+    // 滚动到区块顶部
+    sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+</script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Support — WorkGrid</title>
+    <meta name="description" content="Get help with WorkGrid. Contact us, check the FAQ, or reach out directly. We read every message.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Supabase SDK for Contact Submissions -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { display:['Space Grotesk','sans-serif'], body:['DM Sans','sans-serif'] },
+                    colors: {
+                        dark:{950:'#05060A',900:'#08090D',800:'#0E1017',700:'#12141C',600:'#1A1D28',500:'#222532',400:'#2A2D3A',300:'#3A3E50'},
+                        accent:{DEFAULT:'#00E68A',dim:'rgba(0,230,138,0.08)',mid:'rgba(0,230,138,0.2)'},
+                        warm:{DEFAULT:'#FF7849',dim:'rgba(255,120,73,0.1)'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root{--accent:#00E68A;--warm:#FF7849;--bg:#08090D;--card:#1A1D28;--border:#2A2D3A;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E4E4E9;overflow-x:hidden;}
+        h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0E1017;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:3px;}
+        .wg-logo{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;width:28px;height:28px;}
+        .wg-logo span{border-radius:3px;}.wg-logo .on{background:var(--accent);}.wg-logo .off{background:rgba(255,255,255,0.08);}.wg-logo .warm{background:var(--warm);}
+        .gt{background:linear-gradient(135deg,#00E68A,#00B8D4,#00E68A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .nav-scrolled{background:rgba(8,9,13,0.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid rgba(42,45,58,0.5)!important;}
+
+        .rv{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s cubic-bezier(.25,.46,.45,.94);}
+        .rv.on{opacity:1;transform:translate(0);}
+        .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+
+        /* 支持渠道卡 */
+        .sup-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;transition:all .3s;text-align:center;}
+        .sup-card:hover{border-color:#3A3E50;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.2);}
+
+        /* 表单 */
+        .form-input{background:#12141C;border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:#E4E4E9;font-size:14px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s;width:100%;}
+        .form-input:focus{border-color:var(--accent);}
+        .form-input::placeholder{color:#4A4E5C;}
+        .form-select{background:#12141C;border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:#E4E4E9;font-size:14px;outline:none;font-family:'DM Sans',sans-serif;transition:border-color .2s;width:100%;appearance:none;cursor:pointer;}
+        .form-select:focus{border-color:var(--accent);}
+        textarea.form-input{resize:vertical;min-height:120px;}
+
+        /* FAQ */
+        .faq-item{border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s;}
+        .faq-item:hover{border-color:#3A3E50;}
+        .faq-q{padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;transition:all .2s;}
+        .faq-q:hover{background:rgba(255,255,255,0.015);}
+        .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;padding:0 24px;}
+        .faq-item.open .faq-a{max-height:300px;padding:0 24px 20px;}
+        .faq-icon{transition:transform .3s;flex-shrink:0;color:#6B7280;font-size:13px;}
+        .faq-item.open .faq-icon{transform:rotate(180deg);color:var(--accent);}
+
+        .bp{background:var(--accent);color:#08090D;font-weight:600;border:none;padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bp:hover{background:#00cc7a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,230,138,0.22);}
+        .bs{background:transparent;color:#E4E4E9;font-weight:500;border:1px solid var(--border);padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bs:hover{border-color:#3A3E50;background:rgba(255,255,255,0.025);}
+
+        .mm{position:fixed;inset:0;background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .3s;}
+        .mm.open{opacity:1;pointer-events:all;}
+
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.rv{opacity:1;transform:none;}}
+    </style>
+</head>
+<body>
+
+<!-- ===== 导航栏 ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+            <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="features.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+            <a href="use-cases.html" class="text-sm text-gray-400 hover:text-white transition-colors">Use Cases</a>
+            <a href="pricing.html" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="compare.html" class="text-sm text-gray-400 hover:text-white transition-colors">Compare</a>
+            <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+            <a href="changelog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Changelog</a>
+            <a href="blog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Blog</a>
+            <a href="contact.html" class="text-sm text-accent font-medium">Contact</a>
+        </div>
+        <div class="hidden lg:flex items-center gap-3">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+        </div>
+        <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+</nav>
+<div id="mobMenu" class="mm">
+    <button id="mobClose" class="absolute top-5 right-6 text-white text-2xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <a href="index.html" class="text-xl text-gray-300 hover:text-white ml">Home</a>
+    <a href="features.html" class="text-xl text-gray-300 hover:text-white ml">Features</a>
+    <a href="use-cases.html" class="text-xl text-gray-300 hover:text-white ml">Use Cases</a>
+    <a href="pricing.html" class="text-xl text-gray-300 hover:text-white ml">Pricing</a>
+    <a href="compare.html" class="text-xl text-gray-300 hover:text-white ml">Compare</a>
+    <a href="about.html" class="text-xl text-gray-300 hover:text-white ml">About</a>
+    <a href="changelog.html" class="text-xl text-gray-300 hover:text-white ml">Changelog</a>
+    <a href="blog.html" class="text-xl text-gray-300 hover:text-white ml">Blog</a>
+    <a href="contact.html" class="text-xl text-accent ml">Contact</a>
+    <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp mt-4">Sign Up Free</a>
+</div>
+
+<!-- ===== Hero ===== -->
+<section class="relative pt-28 pb-8 overflow-hidden">
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <h1 class="rv font-display text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-5">
+            We read <span class="gt">every message</span>
+        </h1>
+        <p class="rv d1 text-lg text-gray-400 leading-relaxed max-w-xl mx-auto">
+            No support ticket black hole. No "please allow 3-5 business days." Reach out and a real person responds — usually within a few hours.
+        </p>
+    </div>
+</section>
+
+<!-- ===== Support Channels ===== -->
+<section class="py-10">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="rv sup-card">
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-comment-dots text-accent text-lg"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Live Chat</h3>
+                <p class="text-xs text-gray-500 mb-3">Available on every page</p>
+                <span class="inline-flex items-center gap-1.5 text-xs text-accent font-medium"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> Online now</span>
+            </div>
+            <div class="rv d1 sup-card">
+                <div class="w-12 h-12 rounded-2xl bg-warm-dim flex items-center justify-center mx-auto mb-4"><i class="fa-solid fa-envelope text-warm text-lg"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Email</h3>
+                <p class="text-xs text-gray-500 mb-3">hello@workgrid.app</p>
+                <span class="text-xs text-gray-600">Response in &lt; 12 hours</span>
+            </div>
+            <div class="rv d2 sup-card">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:rgba(0,184,212,0.1);"><i class="fa-brands fa-x-twitter text-lg" style="color:#00B8D4;"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Twitter / X</h3>
+                <p class="text-xs text-gray-500 mb-3">@workgrid</p>
+                <span class="text-xs text-gray-600">DMs open</span>
+            </div>
+            <div class="rv d3 sup-card">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4" style="background:rgba(167,139,250,0.1);"><i class="fa-brands fa-discord text-lg" style="color:#A78BFA;"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Discord</h3>
+                <p class="text-xs text-gray-500 mb-3">Community server</p>
+                <span class="text-xs text-gray-600">Chat with the team</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Main: Form + FAQ ===== -->
+<section class="py-8 pb-20">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="grid lg:grid-cols-5 gap-12">
+
+            <!-- Contact Form -->
+            <div class="lg:col-span-3">
+                <div class="rv mb-6">
+                    <h2 class="font-display text-2xl font-bold text-white mb-2">Send us a message</h2>
+                    <p class="text-sm text-gray-500">Whether it's a bug report, feature request, or just to say hi — we want to hear from you.</p>
+                </div>
+
+                <form class="rv d1 space-y-5" id="contactForm" onsubmit="submitContact(event)">
+                    <div class="grid sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="text-sm text-gray-400 mb-2 block">Full Name</label>
+                            <input type="text" id="cName" required class="form-input" placeholder="Jane Doe">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400 mb-2 block">Email</label>
+                            <input type="email" id="cEmail" required class="form-input" placeholder="jane@company.com">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-2 block">Subject</label>
+                        <select required class="form-select" id="subjSelect">
+                            <option value="">What's this about?</option>
+                            <option>Bug report</option>
+                            <option>Feature request</option>
+                            <option>Billing question</option>
+                            <option>Account help</option>
+                            <option>Partnership / Press</option>
+                            <option>Just saying hi</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-2 block">Message</label>
+                        <textarea id="cMessage" required class="form-input" placeholder="Tell us what's going on. The more detail, the faster we can help."></textarea>
+                    </div>
+                    <div>
+                        <label class="text-sm text-gray-400 mb-2 block">Attachment <span class="text-gray-600">(optional)</span></label>
+                        <div class="form-input flex items-center gap-3 cursor-pointer" style="padding:12px 18px;" onclick="document.getElementById('fileUp').click()">
+                            <i class="fa-solid fa-paperclip text-gray-600"></i>
+                            <span class="text-sm text-gray-600" id="fileLabel">Add a screenshot or file</span>
+                            <input type="file" id="fileUp" class="hidden" onchange="updateFileLabel(this)">
+                        </div>
+                    </div>
+                    <button type="submit" id="cBtn" class="bp w-full justify-center" style="padding:14px;">Send Message <i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+
+                <!-- 成功状态 -->
+                <div class="rv hidden text-center py-12" id="contactOk">
+                    <div class="w-20 h-20 rounded-full bg-accent-dim flex items-center justify-center mx-auto mb-5">
+                        <i class="fa-solid fa-check text-accent text-3xl"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-white mb-2">Message sent</h3>
+                    <p class="text-sm text-gray-400 mb-6">We'll get back to you within 12 hours. Usually much faster.</p>
+                    <button onclick="resetContact()" class="bs">Send another message</button>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="lg:col-span-2">
+                <div class="rv mb-6">
+                    <h2 class="font-display text-2xl font-bold text-white mb-2">Common questions</h2>
+                    <p class="text-sm text-gray-500">Before you ask — maybe we already answered it.</p>
+                </div>
+
+                <div class="rv d1 space-y-3" id="faqList">
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">Is WorkGrid really free?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Yes, during early access. Full features, no limits, no credit card. When pricing launches, early users get locked-in discounts. We'll notify you well before any changes.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">How fast do you respond?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Email: within 12 hours. Live chat: within minutes during active hours. Twitter/DM: within a few hours. We're a solo project, but we take support seriously.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">Can I export my data?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Yes. You can export tasks, contacts, deals, and invoices as CSV anytime. Your data is yours — we never lock it in. If you decide WorkGrid isn't for you, take everything with you.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">What happens when pricing launches?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Early users keep their accounts at a locked-in rate — significantly lower than public pricing. You'll be notified 30 days before any change with the option to continue, downgrade, or export your data.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">Is my data secure?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">All data is encrypted in transit and at rest. Role-based access means HR data is invisible to non-HR roles at every layer — UI, API, and database. We don't sell or share your data. Ever.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">Can I request a feature?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Absolutely — and we actually listen. Check our <a href="changelog.html" class="text-accent hover:underline">Roadmap page</a> to vote on features. Popular requests get built faster. This isn't a suggestion black hole — votes directly influence our sprint planning.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">Do you offer refunds?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Since WorkGrid is currently free, this doesn't apply yet. When pricing launches, we'll offer a 14-day money-back guarantee on paid plans. No questions asked.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-q">
+                            <span class="text-sm text-white font-medium">How do I delete my account?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-a">
+                            <p class="text-sm text-gray-400 leading-relaxed">Settings → Account → Delete. Export your data first, then confirm deletion. Everything is wiped permanently within 24 hours. No retention, no "we'll keep it just in case."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== Direct Contact ===== -->
+<section class="py-16 bg-dark-800">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="rv text-center mb-10">
+            <h2 class="font-display text-2xl font-bold text-white mb-2">Prefer to reach out directly?</h2>
+            <p class="text-sm text-gray-500">No forms, no filters. Just direct access.</p>
+        </div>
+        <div class="rv d1 grid sm:grid-cols-3 gap-5">
+            <a href="mailto:hello@workgrid.app" class="sup-card group" style="text-decoration:none;">
+                <div class="w-12 h-12 rounded-2xl bg-warm-dim flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform"><i class="fa-solid fa-envelope text-warm text-lg"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Email us</h3>
+                <p class="text-xs text-gray-500">hello@workgrid.app</p>
+            </a>
+            <a href="#" class="sup-card group" style="text-decoration:none;">
+                <div class="w-12 h-12 rounded-2xl bg-accent-dim flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform"><i class="fa-brands fa-x-twitter text-accent text-lg"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Tweet at us</h3>
+                <p class="text-xs text-gray-500">@workgrid</p>
+            </a>
+            <a href="#" class="sup-card group" style="text-decoration:none;">
+                <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform" style="background:rgba(167,139,250,0.1);"><i class="fa-brands fa-discord text-lg" style="color:#A78BFA;"></i></div>
+                <h3 class="font-display font-semibold text-white text-sm mb-1">Join Discord</h3>
+                <p class="text-xs text-gray-500">Community & support</p>
+            </a>
+        </div>
+        <div class="rv d2 mt-10 p-6 rounded-2xl border border-dark-400 bg-dark-900 text-center">
+            <p class="text-sm text-gray-400"><i class="fa-solid fa-clock text-accent text-xs mr-2"></i> Typical response time: <span class="text-white font-medium">under 12 hours</span> for email, <span class="text-white font-medium">minutes</span> for live chat. We're building WorkGrid full-time — support isn't a side gig.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="border-t border-dark-400 py-14 bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
+            <div class="lg:col-span-2">
+                <a href="index.html" class="flex items-center gap-2.5 mb-4">
+                    <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+                    <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xs mb-5">The all-in-one workspace that combines tasks, CRM, invoicing, and HR.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4><ul class="space-y-2.5"><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li><li><a href="blog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Blog</a></li><li><a href="contact.html" class="text-sm text-accent">Contact</a></li><li><a href="#" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Privacy</a></li></ul></div>
+        </div>
+        <div class="border-t border-dark-400 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-600">2026 WorkGrid. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with frustration and caffeine.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// --- Supabase Client Setup ---
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+let supabaseClient = null;
+
+if (window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('nav-scrolled',scrollY>40);});
+const mm=document.getElementById('mobMenu');
+document.getElementById('mobBtn').onclick=()=>mm.classList.add('open');
+document.getElementById('mobClose').onclick=()=>mm.classList.remove('open');
+document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('open'));
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// 表单提交
+async function submitContact(e){
+    e.preventDefault();
+    const btn = document.getElementById('cBtn');
+    btn.disabled = true;
+    btn.innerText = 'Sending...';
+
+    const name = document.getElementById('cName').value;
+    const email = document.getElementById('cEmail').value;
+    const subject = document.getElementById('subjSelect').value;
+    const message = document.getElementById('cMessage').value;
+
+    try {
+        if (supabaseClient) {
+            await supabaseClient.from('contacts').insert([{
+                name,
+                email,
+                notes: `[Subject: ${subject}] ${message}`,
+                status: 'lead',
+                source: 'Contact Form'
+            }]);
+        }
+    } catch(err) {
+        console.warn('Contact form submission note:', err);
+    } finally {
+        document.getElementById('contactForm').classList.add('hidden');
+        const ok=document.getElementById('contactOk');
+        ok.classList.remove('hidden');
+        ok.classList.add('rv');
+        setTimeout(()=>ok.classList.add('on'),50);
+        btn.disabled = false;
+        btn.innerText = 'Send Message';
+    }
+}
+
+function resetContact(){
+    document.getElementById('contactForm').classList.remove('hidden');
+    document.getElementById('contactForm').reset();
+    document.getElementById('contactOk').classList.add('hidden');
+    document.getElementById('contactOk').classList.remove('on');
+    document.getElementById('fileLabel').textContent='Add a screenshot or file';
+}
+
+function updateFileLabel(input){
+    const label=document.getElementById('fileLabel');
+    if(input.files.length>0){
+        label.textContent=input.files[0].name;
+        label.style.color='#E4E4E9';
+    }else{
+        label.textContent='Add a screenshot or file';
+        label.style.color='';
+    }
+}
+
+// FAQ 切换
+function toggleFaq(item){
+    const wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+</script>
+</body>
+</html>

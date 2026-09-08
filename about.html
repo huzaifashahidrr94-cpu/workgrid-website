@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — WorkGrid</title>
+    <meta name="description" content="The story behind WorkGrid. Why a solo developer built an all-in-one workspace after years of frustration with bloated CRMs.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { display:['Space Grotesk','sans-serif'], body:['DM Sans','sans-serif'] },
+                    colors: {
+                        dark:{950:'#05060A',900:'#08090D',800:'#0E1017',700:'#12141C',600:'#1A1D28',500:'#222532',400:'#2A2D3A',300:'#3A3E50'},
+                        accent:{DEFAULT:'#00E68A',dim:'rgba(0,230,138,0.08)',mid:'rgba(0,230,138,0.2)',glow:'rgba(0,230,138,0.35)'},
+                        warm:{DEFAULT:'#FF7849',dim:'rgba(255,120,73,0.1)'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root{--accent:#00E68A;--warm:#FF7849;--bg:#08090D;--card:#1A1D28;--border:#2A2D3A;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E4E4E9;overflow-x:hidden;}
+        h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0E1017;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:3px;}
+        .wg-logo{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;width:28px;height:28px;}
+        .wg-logo span{border-radius:3px;}.wg-logo .on{background:var(--accent);}.wg-logo .off{background:rgba(255,255,255,0.08);}.wg-logo .warm{background:var(--warm);}
+        .glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+        .gt{background:linear-gradient(135deg,#00E68A 0%,#00B8D4 50%,#00E68A 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .nav-scrolled{background:rgba(8,9,13,0.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid rgba(42,45,58,0.5)!important;}
+
+        .rv{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s cubic-bezier(.25,.46,.45,.94);}
+        .rv.fl{transform:translateX(-32px) translateY(0);}
+        .rv.fr{transform:translateX(32px) translateY(0);}
+        .rv.fs{transform:scale(.94);}
+        .rv.on{opacity:1;transform:translate(0) scale(1);}
+        .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}
+
+        /* 引用块 */
+        .pull-quote{position:relative;padding:32px 32px 32px 48px;border-left:3px solid var(--accent);background:rgba(0,230,138,0.02);border-radius:0 16px 16px 0;}
+        .pull-quote::before{content:'\201C';position:absolute;top:16px;left:14px;font-size:48px;font-family:Georgia,serif;color:var(--accent);opacity:.3;line-height:1;}
+        .pull-quote.warm-q{border-left-color:var(--warm);background:rgba(255,120,73,0.02);}
+        .pull-quote.warm-q::before{color:var(--warm);}
+
+        /* 时间线 */
+        .timeline{position:relative;padding-left:32px;}
+        .timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--accent),var(--border) 70%,transparent);}
+        .tl-item{position:relative;padding-bottom:32px;}
+        .tl-item:last-child{padding-bottom:0;}
+        .tl-dot{position:absolute;left:-32px;top:4px;width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);z-index:1;}
+        .tl-dot.warm{border-color:var(--warm);}
+        .tl-dot.gray{border-color:#3A3E50;}
+
+        /* 价值观卡片 */
+        .val-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s;position:relative;overflow:hidden;}
+        .val-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s;}
+        .val-card:hover{border-color:rgba(0,230,138,0.2);transform:translateY(-3px);}
+        .val-card:hover::after{opacity:1;}
+
+        /* 照片网格 */
+        .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .photo-grid>div{border-radius:16px;overflow:hidden;aspect-ratio:4/3;}
+        .photo-grid>div:first-child{grid-row:span 2;aspect-ratio:auto;}
+
+        /* 章节标签 */
+        .chapter{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+        .chapter::before{content:'';width:24px;height:1px;background:var(--accent);}
+
+        /* 分隔 */
+        .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);max-width:200px;margin:0 auto;}
+
+        .bp{background:var(--accent);color:#08090D;font-weight:600;border:none;padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bp:hover{background:#00cc7a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,230,138,0.22);}
+        .bs{background:transparent;color:#E4E4E9;font-weight:500;border:1px solid var(--border);padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bs:hover{border-color:#3A3E50;background:rgba(255,255,255,0.025);}
+
+        .mm{position:fixed;inset:0;background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .3s;}
+        .mm.open{opacity:1;pointer-events:all;}
+
+        /* 阅读进度条 */
+        .read-progress{position:fixed;top:64px;left:0;height:2px;background:var(--accent);z-index:49;transition:width .1s linear;width:0%;}
+
+        @media(max-width:768px){
+            .photo-grid{grid-template-columns:1fr;}.photo-grid>div:first-child{grid-row:auto;aspect-ratio:16/10;}
+            .pull-quote{padding:24px 24px 24px 40px;}
+        }
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.rv{opacity:1;transform:none;}}
+    </style>
+</head>
+<body>
+
+<!-- 阅读进度条 -->
+<div class="read-progress" id="readProg"></div>
+
+<!-- ===== 导航栏 ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+            <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="features.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+            <a href="compare.html" class="text-sm text-gray-400 hover:text-white transition-colors">Compare</a>
+            <a href="about.html" class="text-sm text-accent font-medium">About</a>
+            <a href="pricing.html" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="changelog.html" class="text-sm text-gray-400 hover:text-white transition-colors">Changelog</a>
+        </div>
+        <div class="hidden lg:flex items-center gap-3">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+        </div>
+        <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+</nav>
+
+<div id="mobMenu" class="mm">
+    <button id="mobClose" class="absolute top-5 right-6 text-white text-2xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <a href="index.html" class="text-xl text-gray-300 hover:text-white ml">Home</a>
+    <a href="features.html" class="text-xl text-gray-300 hover:text-white ml">Features</a>
+    <a href="compare.html" class="text-xl text-gray-300 hover:text-white ml">Compare</a>
+    <a href="about.html" class="text-xl text-accent ml">About</a>
+    <a href="pricing.html" class="text-xl text-gray-300 hover:text-white ml">Pricing</a>
+    <a href="changelog.html" class="text-xl text-gray-300 hover:text-white ml">Changelog</a>
+    <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp mt-4">Sign Up Free</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="relative pt-28 pb-16 overflow-hidden">
+    <div class="glow-orb" style="width:600px;height:600px;background:rgba(0,230,138,0.03);top:-200px;right:-200px;"></div>
+    <div class="max-w-3xl mx-auto px-6 relative z-10">
+        <div class="rv chapter">The Story</div>
+        <h1 class="rv d1 font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.08] mb-6">
+            I built WorkGrid because I was<br class="hidden sm:block"> <span class="gt">done switching tools.</span>
+        </h1>
+        <p class="rv d2 text-lg text-gray-400 leading-relaxed mb-8 max-w-xl">
+            This isn't a polished corporate origin story. It's the honest, messy, frustrating journey that led to WorkGrid — told by the person who built it.
+        </p>
+        <div class="rv d3 flex items-center gap-4">
+            <img src="https://picsum.photos/seed/wg-founder-portrait/120/120.jpg" alt="Founder" class="w-14 h-14 rounded-2xl object-cover border-2 border-dark-400">
+            <div>
+                <p class="text-white font-medium">Solo Developer & Founder</p>
+                <p class="text-sm text-gray-500">Building WorkGrid in public, one commit at a time</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== THE PROBLEM ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 01</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-8">The problem nobody was solving</h2>
+
+        <div class="rv d2 space-y-6 text-gray-400 leading-[1.8] text-[15.5px]">
+            <p>It started the way most bad situations start: slowly.</p>
+            <p>I was managing a small team — 5 people, a handful of clients, a growing list of tasks. Nothing complicated. The kind of operation that should be manageable with a whiteboard and some discipline.</p>
+            <p>But whiteboards don't work remotely. So I opened my laptop and did what everyone does: I went looking for a tool.</p>
+
+            <div class="pull-quote rv d3">
+                <p class="text-white font-medium text-lg leading-relaxed">I didn't need a CRM. I didn't need a project manager. I needed a place where my team could work — and I couldn't find one.</p>
+            </div>
+
+            <p>Every tool I tried was either too much or too little. HubSpot wanted me to build a marketing empire when I just wanted to track three deals. Monday.com gave me beautiful boards but collapsed the moment I needed invoicing. ClickUp had so many features that my team stared at the screen like deer in headlights.</p>
+            <p>And then there was Notion. Oh, Notion. The tool everyone recommends when they don't want to give you a real answer.</p>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== THE JOURNEY (TIMELINE) ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 02</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-4">The tool-hopping timeline</h2>
+        <p class="rv d2 text-gray-500 mb-12">Two years. Six tools. Zero satisfaction. Here's what actually happened.</p>
+
+        <div class="rv d3 timeline">
+            <div class="tl-item">
+                <div class="tl-dot gray"></div>
+                <p class="text-xs text-gray-600 font-medium mb-1">Early 2022</p>
+                <p class="text-white font-medium mb-1">Started with Trello</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Free, simple, got us started. But within a month we hit the wall: no CRM features, no invoicing, no way to track deals. Trello is a great kanban board and nothing else.</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot warm"></div>
+                <p class="text-xs text-gray-600 font-medium mb-1">Mid 2022</p>
+                <p class="text-white font-medium mb-1">Switched to Notion (the "build anything" phase)</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Someone told me "you can build a CRM in Notion!" So I did. Spent two weeks setting up databases, relations, formulas, automations. It worked — until I needed to send an invoice and realized I'd have to build that too. Then HR. Then attendance. At some point you're not using a tool — you're building one.</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot warm"></div>
+                <p class="text-xs text-gray-600 font-medium mb-1">Late 2022</p>
+                <p class="text-white font-medium mb-1">Tried HubSpot (the "proper CRM" phase)</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Signed up for the free tier. Immediately hit the "upgrade to see this" wall. Upgraded to Starter at $20/user/mo. Realized we still couldn't do invoicing. Still couldn't do HR. Still needed Trello for tasks because HubSpot's task management is an afterthought. Now paying for two tools and using both poorly.</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot warm"></div>
+                <p class="text-xs text-gray-600 font-medium mb-1">Early 2023</p>
+                <p class="text-white font-medium mb-1">Gave Monday.com a shot</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Beautiful boards. Genuinely nice UI. But "CRM template" is just a board with a "Deal Stage" column — no pipeline logic, no forecasting, no contact profiles. And still no invoicing, no HR. The marketing said "work OS" but it was really "task OS."</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot warm"></div>
+                <p class="text-xs text-gray-600 font-medium mb-1">Mid 2023</p>
+                <p class="text-white font-medium mb-1">Briefly tried ClickUp</p>
+                <p class="text-sm text-gray-500 leading-relaxed">Installed it. Opened it. Saw approximately 47 menu items, 12 view types, and a settings page that looked like the cockpit of a 747. My team's reaction: "absolutely not." Uninstalled within a week. No invoicing. No HR. More features than any human needs but missing the two things we actually needed.</p>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot" style="border-color:#FF5252;"></div>
+                <p class="text-xs text-gray-600 font-medium mb-1">Late 2023</p>
+                <p class="text-white font-medium mb-1">The breaking point</p>
+                <p class="text-sm text-gray-500 leading-relaxed">I sat down and counted: we were using Notion for docs, Stripe for invoicing, a shared Google Sheet for HR/attendance, and email for deal tracking. Four tools. None of them talking to each other. I was spending 3+ hours a week just moving data between them. That's when I stopped looking and started building.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== THE BREAKING POINT ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 03</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-8">The moment I snapped</h2>
+
+        <div class="rv d2 space-y-6 text-gray-400 leading-[1.8] text-[15.5px]">
+            <p>It was a Thursday evening. I was copying invoice data from Stripe into a Google Sheet so our "HR person" (who was actually just the most organized person on the team) could see what clients had paid. Then I had to update the deal status in HubSpot. Then I had to mark the related tasks as done in Notion.</p>
+            <p>Same data. Three places. Manual entry. Every single time.</p>
+
+            <div class="pull-quote warm-q rv d3">
+                <p class="text-white font-medium text-lg leading-relaxed">I looked at my screen — four tabs open, all showing the same information in different formats — and thought: "This is insane. I'm a developer. Why am I doing this manually?"</p>
+            </div>
+
+            <p>That night I opened my code editor. Didn't plan anything. Didn't make a Notion database for planning (ironic, I know). Just started building a workspace where tasks, deals, invoices, and HR lived in one place.</p>
+            <p>It was ugly. It was broken. It was mine.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== PHOTO SECTION ===== -->
+<section class="py-12">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="rv photo-grid">
+            <div>
+                <img src="https://picsum.photos/seed/wg-workspace-1/600/800.jpg" alt="Workspace" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <img src="https://picsum.photos/seed/wg-code-screen/600/400.jpg" alt="Code" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <img src="https://picsum.photos/seed/wg-coffee-desk/600/400.jpg" alt="Desk" class="w-full h-full object-cover">
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== THE VISION ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 04</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-8">What WorkGrid is actually meant to be</h2>
+
+        <div class="rv d2 space-y-6 text-gray-400 leading-[1.8] text-[15.5px]">
+            <p>WorkGrid isn't trying to be the next Salesforce. It's not trying to be the next HubSpot. It's trying to be the tool I couldn't find two years ago.</p>
+            <p>Here's the core idea, stated as simply as I can:</p>
+
+            <div class="pull-quote rv d3">
+                <p class="text-white font-medium text-lg leading-relaxed">A small team should be able to manage tasks, track deals, send invoices, and run HR from one workspace — without paying enterprise prices or hiring a consultant to set it up.</p>
+            </div>
+
+            <p>That's it. That's the whole vision. I'm not trying to disrupt a $100B industry or build a unicorn startup. I'm trying to solve a problem that I and thousands of other small teams face every day: <span class="text-white font-medium">tool fragmentation</span>.</p>
+            <p>The average small team uses 5-8 SaaS tools. Each one costs money. Each one has a learning curve. None of them talk to each other properly. The result is a patchwork of apps held together by copy-paste and hope.</p>
+            <p>WorkGrid is my answer to that. Not by being the best CRM, or the best project tool, or the best invoicing app — but by being <span class="text-white font-medium">good enough at all of them</span> that you don't need anything else.</p>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== PHILOSOPHY ===== -->
+<section class="py-16">
+    <div class="max-w-5xl mx-auto px-6">
+        <div class="rv text-center mb-12">
+            <div class="chapter" style="justify-content:center;">Chapter 05</div>
+            <h2 class="rv d1 font-display text-3xl font-bold text-white mb-3">Things I believe about software</h2>
+            <p class="rv d2 text-gray-500 max-w-lg mx-auto">Not mission statements. Not values printed on a wall. Actual beliefs that shape every decision I make building WorkGrid.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-5">
+            <div class="rv val-card">
+                <div class="w-10 h-10 rounded-xl bg-accent-dim flex items-center justify-center mb-4"><i class="fa-solid fa-feather text-accent"></i></div>
+                <h3 class="font-display font-semibold text-white mb-2">Simple beats powerful</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">A tool that 10 people actually use is better than a tool that 100 people could use but don't. Every feature I add gets weighed against: "Will this make someone close the tab?"</p>
+            </div>
+            <div class="rv d1 val-card">
+                <div class="w-10 h-10 rounded-xl bg-warm-dim flex items-center justify-center mb-4"><i class="fa-solid fa-clock text-warm"></i></div>
+                <h3 class="font-display font-semibold text-white mb-2">2 minutes, not 2 weeks</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">If your onboarding takes more than a coffee break, you've failed. WorkGrid should feel obvious the first time you open it. No tutorials required.</p>
+            </div>
+            <div class="rv d2 val-card">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(0,184,212,0.1);"><i class="fa-solid fa-eye-slash" style="color:#00B8D4;"></i></div>
+                <h3 class="font-display font-semibold text-white mb-2">Privacy isn't a feature — it's a right</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">HR data should never be visible to sales. Deal values should never be visible to interns. Role-based access isn't optional — it's the default.</p>
+            </div>
+            <div class="rv d3 val-card">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(167,139,250,0.1);"><i class="fa-solid fa-bullseye" style="color:#A78BFA;"></i></div>
+                <h3 class="font-display font-semibold text-white mb-2">Good enough at everything > perfect at one thing</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">WorkGrid's invoicing won't beat Stripe. Its CRM won't beat Salesforce. But having all four in one place beats juggling all of them separately. Every time.</p>
+            </div>
+            <div class="rv d4 val-card">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(251,191,36,0.1);"><i class="fa-solid fa-hand-holding-heart" style="color:#FBBF24;"></i></div>
+                <h3 class="font-display font-semibold text-white mb-2">Honesty over marketing</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Check our comparison page. We list what WorkGrid can't do. We list competitors' strengths. If you need something we don't have, I'd rather tell you upfront than waste your time.</p>
+            </div>
+            <div class="rv d5 val-card">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style="background:rgba(244,114,182,0.1);"><i class="fa-solid fa-seedling" style="color:#F472B6;"></i></div>
+                <h3 class="font-display font-semibold text-white mb-2">Ship fast, listen faster</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">I'd rather ship an imperfect feature this week and iterate than ship a perfect feature next quarter. The changelog is public. The roadmap is public. Progress is visible.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== BUILDING IN PUBLIC ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 06</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-8">Building in public</h2>
+
+        <div class="rv d2 space-y-6 text-gray-400 leading-[1.8] text-[15.5px]">
+            <p>I made a deliberate choice to build WorkGrid transparently. Not because it's a growth hack (though it helps), but because I think software should be built by people who are accountable.</p>
+            <p>What "building in public" means here:</p>
+        </div>
+
+        <div class="rv d3 grid sm:grid-cols-2 gap-4 mt-8 mb-8">
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <i class="fa-solid fa-code-branch text-accent text-sm mt-0.5"></i>
+                <div><p class="text-white text-sm font-medium mb-0.5">Public Changelog</p><p class="text-xs text-gray-500">Every feature, fix, and improvement documented with dates</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <i class="fa-solid fa-map text-accent text-sm mt-0.5"></i>
+                <div><p class="text-white text-sm font-medium mb-0.5">Public Roadmap</p><p class="text-xs text-gray-500">See what's coming next — no surprise paywalls</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <i class="fa-solid fa-bug text-warm text-sm mt-0.5"></i>
+                <div><p class="text-white text-sm font-medium mb-0.5">Honest About Bugs</p><p class="text-xs text-gray-500">If something's broken, I say it's broken. No spinning.</p></div>
+            </div>
+            <div class="flex items-start gap-3 p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <i class="fa-solid fa-comments text-sm mt-0.5" style="color:#00B8D4;"></i>
+                <div><p class="text-white text-sm font-medium mb-0.5">Direct Access to Me</p><p class="text-xs text-gray-500">Not a support ticket black hole — actual conversations</p></div>
+            </div>
+        </div>
+
+        <div class="rv d4 space-y-6 text-gray-400 leading-[1.8] text-[15.5px]">
+            <p>WorkGrid is a solo project. That's not a weakness — it's a feature. There's no PM deciding what to build based on a spreadsheet. There's no sales team pushing for enterprise features while ignoring what small teams need. There's just me, my code editor, and the feedback from people who actually use it.</p>
+
+            <div class="pull-quote rv d5">
+                <p class="text-white font-medium text-lg leading-relaxed">I'd rather have 100 users who love WorkGrid than 10,000 users who tolerate it.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== THE PERSON ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 07</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-10">A bit about me</h2>
+
+        <div class="rv d2 flex flex-col sm:flex-row gap-8 items-start">
+            <div class="shrink-0">
+                <div class="relative inline-block">
+                    <img src="https://picsum.photos/seed/wg-founder-about/300/300.jpg" alt="Founder" class="w-40 h-40 rounded-2xl object-cover border-2 border-dark-400">
+                    <div class="absolute -bottom-2 -right-2 w-40 h-40 rounded-2xl border border-accent/20 -z-10"></div>
+                </div>
+            </div>
+            <div class="space-y-4 text-gray-400 leading-[1.8] text-[15px]">
+                <p>I'm a full-stack developer who got tired of building tools for other people while struggling with my own tool stack. That contradiction — building software for a living but being unable to find software that works for me — is what drove this project.</p>
+                <p>I work late at night, fueled by coffee and the irrational belief that one person can build something that competes with VC-backed companies. Maybe that's naive. Maybe that's exactly what makes it work.</p>
+                <p>When I'm not coding WorkGrid, I'm probably reading about product design, complaining about SaaS pricing, or playing video games to reset my brain.</p>
+            </div>
+        </div>
+
+        <!-- 快速事实 -->
+        <div class="rv d3 grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10">
+            <div class="text-center p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-2xl font-bold text-white">1</p>
+                <p class="text-xs text-gray-500 mt-1">Developer</p>
+            </div>
+            <div class="text-center p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-2xl font-bold text-accent">6+</p>
+                <p class="text-xs text-gray-500 mt-1">Months of shipping</p>
+            </div>
+            <div class="text-center p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-2xl font-bold text-white">4</p>
+                <p class="text-xs text-gray-500 mt-1">Modules shipped</p>
+            </div>
+            <div class="text-center p-4 rounded-xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-2xl font-bold" style="color:var(--warm);">0</p>
+                <p class="text-xs text-gray-500 mt-1">VC funding</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="max-w-3xl mx-auto px-6"><div class="divider"></div></div>
+
+<!-- ===== THE ASK ===== -->
+<section class="py-16">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="rv chapter">Chapter 08</div>
+        <h2 class="rv d1 font-display text-3xl font-bold text-white mb-8">What I'm asking from you</h2>
+
+        <div class="rv d2 space-y-6 text-gray-400 leading-[1.8] text-[15.5px]">
+            <p>I'm not asking you to pay. WorkGrid is free during early access — no credit card, no trial limits, no "upgrade to unlock" tricks.</p>
+            <p>What I am asking is this:</p>
+        </div>
+
+        <div class="rv d3 space-y-4 mt-6 mb-8">
+            <div class="flex items-start gap-4 p-5 rounded-xl bg-dark-800 border border-dark-400">
+                <span class="font-display font-bold text-accent text-lg mt-0.5">01</span>
+                <div><p class="text-white font-medium mb-1">Try it</p><p class="text-sm text-gray-500 leading-relaxed">Actually use it for a week. Not just open it and close it. Create a workspace, add some tasks, make a deal, send a fake invoice. See if it clicks.</p></div>
+            </div>
+            <div class="flex items-start gap-4 p-5 rounded-xl bg-dark-800 border border-dark-400">
+                <span class="font-display font-bold text-accent text-lg mt-0.5">02</span>
+                <div><p class="text-white font-medium mb-1">Tell me what's broken</p><p class="text-sm text-gray-500 leading-relaxed">I'm one person. I will miss things. When you find a bug, a confusing flow, or a missing feature — tell me. I read every message.</p></div>
+            </div>
+            <div class="flex items-start gap-4 p-5 rounded-xl bg-dark-800 border border-dark-400">
+                <span class="font-display font-bold text-accent text-lg mt-0.5">03</span>
+                <div><p class="text-white font-medium mb-1">Share it with one person</p><p class="text-sm text-gray-500 leading-relaxed">If WorkGrid solves a problem for you, someone you know probably has the same problem. A single share means more than any ad I could run.</p></div>
+            </div>
+        </div>
+
+        <div class="rv d4 pull-quote">
+            <p class="text-white font-medium text-lg leading-relaxed">That's it. No growth hacks, no referral programs, no "invite 5 friends to unlock features." Just try it, be honest about it, and share it if you think it's good.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 底部 CTA ===== -->
+<section class="relative py-24 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.04);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <h2 class="rv font-display text-3xl sm:text-4xl font-bold text-white mb-5">So... <span class="gt">want to see it?</span></h2>
+        <p class="rv d1 text-gray-400 mb-8 max-w-lg mx-auto">Everything I just described is live, free, and waiting. Two minutes to set up. No strings attached.</p>
+        <div class="rv d2 flex flex-wrap gap-4 justify-center">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-lg" style="padding:16px 36px;">Try WorkGrid Free <i class="fa-solid fa-arrow-right"></i></a>
+            <a href="features.html" class="bs text-lg" style="padding:16px 36px;">See What's Inside</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="border-t border-dark-400 py-14 bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
+            <div class="lg:col-span-2">
+                <a href="index.html" class="flex items-center gap-2.5 mb-4">
+                    <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+                    <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xs mb-5">The all-in-one workspace that combines tasks, CRM, invoicing, and HR. Built by a solo developer who was tired of bloated tools.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li><li><a href="contact.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li></ul></div>
+        </div>
+        <div class="border-t border-dark-400 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-600">2026 WorkGrid. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with frustration and caffeine.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// 导航栏
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('nav-scrolled',scrollY>40);});
+
+// 阅读进度条
+const readProg=document.getElementById('readProg');
+window.addEventListener('scroll',()=>{
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    const p=(scrollY/h)*100;
+    readProg.style.width=Math.min(p,100)+'%';
+});
+
+// 移动菜单
+const mm=document.getElementById('mobMenu');
+document.getElementById('mobBtn').onclick=()=>mm.classList.add('open');
+document.getElementById('mobClose').onclick=()=>mm.classList.remove('open');
+document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('open'));
+
+// 滚动显现
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// 平滑滚动
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+</script>
+</body>
+</html>

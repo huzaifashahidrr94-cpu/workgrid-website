@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog & Roadmap — WorkGrid</title>
+    <meta name="description" content="WorkGrid ships fast. See every update we've released and what's coming next on our public roadmap.">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { display:['Space Grotesk','sans-serif'], body:['DM Sans','sans-serif'] },
+                    colors: {
+                        dark:{950:'#05060A',900:'#08090D',800:'#0E1017',700:'#12141C',600:'#1A1D28',500:'#222532',400:'#2A2D3A',300:'#3A3E50'},
+                        accent:{DEFAULT:'#00E68A',dim:'rgba(0,230,138,0.08)',mid:'rgba(0,230,138,0.2)'},
+                        warm:{DEFAULT:'#FF7849',dim:'rgba(255,120,73,0.1)'},
+                        cyan:{DEFAULT:'#00B8D4',dim:'rgba(0,184,212,0.1)'},
+                        violet:{DEFAULT:'#A78BFA',dim:'rgba(167,139,250,0.1)'},
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root{--accent:#00E68A;--warm:#FF7849;--bg:#08090D;--card:#1A1D28;--border:#2A2D3A;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:#E4E4E9;overflow-x:hidden;}
+        h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;}
+        ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:#0E1017;}::-webkit-scrollbar-thumb{background:#2A2D3A;border-radius:3px;}
+        .wg-logo{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;width:28px;height:28px;}
+        .wg-logo span{border-radius:3px;}.wg-logo .on{background:var(--accent);}.wg-logo .off{background:rgba(255,255,255,0.08);}.wg-logo .warm{background:var(--warm);}
+        .glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+        .gt{background:linear-gradient(135deg,#00E68A,#00B8D4,#00E68A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .nav-scrolled{background:rgba(8,9,13,0.88)!important;backdrop-filter:blur(24px)!important;border-bottom:1px solid rgba(42,45,58,0.5)!important;}
+
+        .rv{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s cubic-bezier(.25,.46,.45,.94);}
+        .rv.on{opacity:1;transform:translate(0);}
+        .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
+
+        /* 标签切换 */
+        .tab-btn{padding:10px 22px;border-radius:11px;font-size:14px;font-weight:600;border:1px solid var(--border);background:transparent;color:#6B7280;cursor:pointer;transition:all .25s;font-family:'Space Grotesk',sans-serif;}
+        .tab-btn:hover{color:#E4E4E9;border-color:#3A3E50;}
+        .tab-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,230,138,0.06);}
+        .tab-panel{display:none;}.tab-panel.active{display:block;}
+
+        /* 版本条目 */
+        .ver-entry{position:relative;padding-left:28px;padding-bottom:36px;border-left:2px solid var(--border);margin-left:8px;}
+        .ver-entry:last-child{padding-bottom:0;border-left-color:transparent;}
+        .ver-dot{position:absolute;left:-8px;top:0;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);z-index:1;}
+        .ver-dot.minor{border-color:#3A3E50;}
+        .ver-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+
+        /* 类别标签 */
+        .cat-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+        .cat-feat{background:rgba(0,230,138,0.1);color:var(--accent);}
+        .cat-impr{background:rgba(0,184,212,0.1);color:#00B8D4;}
+        .cat-fix{background:rgba(255,120,73,0.1);color:var(--warm);}
+        .cat-break{background:rgba(255,82,82,0.1);color:#FF5252;}
+
+        /* 变更项 */
+        .ch-item{display:flex;align-items:start;gap:8px;padding:6px 0;font-size:13.5px;line-height:1.5;}
+        .ch-item .cat-tag{flex-shrink:0;margin-top:2px;}
+
+        /* 路线图卡 */
+        .road-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all .3s;position:relative;}
+        .road-card:hover{border-color:#3A3E50;transform:translateY(-2px);}
+        .road-card .priority{position:absolute;top:16px;right:16px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;}
+        .priority.high{background:rgba(255,120,73,0.1);color:var(--warm);}
+        .priority.med{background:rgba(0,184,212,0.1);color:#00B8D4;}
+        .priority.low{background:rgba(255,255,255,0.04);color:#6B7280;}
+
+        /* 路线图状态标签 */
+        .status-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;}
+        .status-progress{background:rgba(0,230,138,0.1);color:var(--accent);}
+        .status-planned{background:rgba(0,184,212,0.1);color:#00B8D4;}
+        .status-consider{background:rgba(167,139,250,0.1);color:#A78BFA;}
+
+        /* 投票按钮 */
+        .vote-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:transparent;color:#6B7280;font-size:11px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+        .vote-btn:hover{border-color:var(--accent);color:var(--accent);}
+        .vote-btn.voted{border-color:var(--accent);color:var(--accent);background:rgba(0,230,138,0.06);}
+
+        .bp{background:var(--accent);color:#08090D;font-weight:600;border:none;padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bp:hover{background:#00cc7a;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,230,138,0.22);}
+        .bs{background:transparent;color:#E4E4E9;font-weight:500;border:1px solid var(--border);padding:11px 26px;border-radius:11px;cursor:pointer;font-size:14.5px;font-family:'Space Grotesk',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:7px;}
+        .bs:hover{border-color:#3A3E50;background:rgba(255,255,255,0.025);}
+
+        .mm{position:fixed;inset:0;background:rgba(8,9,13,0.96);backdrop-filter:blur(20px);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .3s;}
+        .mm.open{opacity:1;pointer-events:all;}
+
+        @media(max-width:768px){.ver-entry{padding-left:22px;}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}.rv{opacity:1;transform:none;}}
+    </style>
+</head>
+<body>
+
+<!-- ===== 导航栏 ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2.5">
+            <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+            <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+        </a>
+        <div class="hidden lg:flex items-center gap-8">
+            <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-colors">Home</a>
+            <a href="features.html" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+            <a href="use-cases.html" class="text-sm text-gray-400 hover:text-white transition-colors">Use Cases</a>
+            <a href="pricing.html" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+            <a href="compare.html" class="text-sm text-gray-400 hover:text-white transition-colors">Compare</a>
+            <a href="about.html" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+            <a href="changelog.html" class="text-sm text-accent font-medium">Changelog</a>
+        </div>
+        <div class="hidden lg:flex items-center gap-3">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+        </div>
+        <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+</nav>
+<div id="mobMenu" class="mm">
+    <button id="mobClose" class="absolute top-5 right-6 text-white text-2xl" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <a href="index.html" class="text-xl text-gray-300 hover:text-white ml">Home</a>
+    <a href="features.html" class="text-xl text-gray-300 hover:text-white ml">Features</a>
+    <a href="use-cases.html" class="text-xl text-gray-300 hover:text-white ml">Use Cases</a>
+    <a href="pricing.html" class="text-xl text-gray-300 hover:text-white ml">Pricing</a>
+    <a href="compare.html" class="text-xl text-gray-300 hover:text-white ml">Compare</a>
+    <a href="about.html" class="text-xl text-gray-300 hover:text-white ml">About</a>
+    <a href="changelog.html" class="text-xl text-accent ml">Changelog</a>
+    <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp mt-4">Sign Up Free</a>
+</div>
+
+<!-- ===== Hero ===== -->
+<section class="relative pt-28 pb-8 overflow-hidden">
+    <div class="glow-orb" style="width:500px;height:500px;background:rgba(0,230,138,0.03);top:-100px;left:50%;transform:translateX(-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <div class="rv inline-flex items-center gap-2 bg-accent-dim border border-accent/20 rounded-full px-4 py-1.5 mb-6">
+            <i class="fa-solid fa-code-branch text-accent text-xs"></i>
+            <span class="text-xs font-medium text-accent">This isn't a dead project</span>
+        </div>
+        <h1 class="rv d1 font-display text-4xl sm:text-5xl font-bold text-white leading-[1.1] mb-6">
+            Every update. <span class="gt">Public. Honest. Frequent.</span>
+        </h1>
+        <p class="rv d2 text-lg text-gray-400 leading-relaxed max-w-xl mx-auto">
+            The changelog shows what we shipped. The roadmap shows what's next. No secrets, no vaporware, no "coming soon" that means never.
+        </p>
+    </div>
+</section>
+
+<!-- ===== Stats ===== -->
+<section class="py-8">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="rv grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="text-center p-5 rounded-2xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-3xl font-bold text-white">7</p>
+                <p class="text-xs text-gray-500 mt-1">Releases shipped</p>
+            </div>
+            <div class="text-center p-5 rounded-2xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-3xl font-bold text-accent">24</p>
+                <p class="text-xs text-gray-500 mt-1">Features added</p>
+            </div>
+            <div class="text-center p-5 rounded-2xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-3xl font-bold" style="color:#00B8D4;">6+</p>
+                <p class="text-xs text-gray-500 mt-1">Months active</p>
+            </div>
+            <div class="text-center p-5 rounded-2xl bg-dark-800 border border-dark-400">
+                <p class="font-display text-3xl font-bold" style="color:var(--warm);">0</p>
+                <p class="text-xs text-gray-500 mt-1">Vaporware promises</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== Tab Switcher ===== -->
+<section class="py-6">
+    <div class="max-w-4xl mx-auto px-6 flex justify-center gap-3">
+        <button class="tab-btn active" id="btn-changelog" onclick="showTab('changelog')">Changelog</button>
+        <button class="tab-btn" id="btn-roadmap" onclick="showTab('roadmap')">Roadmap</button>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- ===== CHANGELOG ===== -->
+<!-- ============================================ -->
+<div class="tab-panel active" id="panel-changelog">
+<section class="py-8 pb-24">
+    <div class="max-w-3xl mx-auto px-6">
+
+        <!-- v1.5 -->
+        <div class="rv ver-entry">
+            <div class="ver-dot"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-accent-dim text-accent border border-accent/20">v1.5</span>
+                <span class="text-xs text-gray-600">January 2025</span>
+                <span class="text-xs font-medium text-white ml-1">Calendar View & Notifications Overhaul</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Calendar view for tasks — see deadlines, meetings, and milestones on a monthly/weekly grid</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Notification center with smart digest — get a morning summary instead of 47 pings</span></div>
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Kanban card preview on hover — see task details without opening the card</span></div>
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Deal pipeline drag-and-drop is 3x smoother on mobile</span></div>
+                <div class="ch-item"><span class="cat-tag cat-fix">Fixed</span><span class="text-gray-400">Invoice PDF rendering issue on Safari — line items now display correctly</span></div>
+            </div>
+        </div>
+
+        <!-- v1.4 -->
+        <div class="rv ver-entry">
+            <div class="ver-dot"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-accent-dim text-accent border border-accent/20">v1.4</span>
+                <span class="text-xs text-gray-600">December 2024</span>
+                <span class="text-xs font-medium text-white ml-1">HR Portal Launch</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Full HR Portal — employee directory, leave management, attendance tracking</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Role-isolated module access — HR data is invisible to non-HR roles</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Onboarding checklists — create task lists for new hires</span></div>
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Role-based access now enforces at API level, not just UI hiding</span></div>
+                <div class="ch-item"><span class="cat-tag cat-fix">Fixed</span><span class="text-gray-400">Dashboard loading time reduced by 40% for large workspaces</span></div>
+            </div>
+        </div>
+
+        <!-- v1.3 -->
+        <div class="rv ver-entry">
+            <div class="ver-dot"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-accent-dim text-accent border border-accent/20">v1.3</span>
+                <span class="text-xs text-gray-600">November 2024</span>
+                <span class="text-xs font-medium text-white ml-1">Invoicing System</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Create, send, and track invoices with line items and due dates</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Invoice status tracking — Draft, Sent, Paid, Overdue</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Export invoices as PDF</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Revenue reports — filter by client, month, or project</span></div>
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Contact profiles now show linked invoices and deal history</span></div>
+                <div class="ch-item"><span class="cat-tag cat-fix">Fixed</span><span class="text-gray-400">Date picker alignment issue on Firefox</span></div>
+            </div>
+        </div>
+
+        <!-- v1.2 -->
+        <div class="rv ver-entry">
+            <div class="ver-dot"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-accent-dim text-accent border border-accent/20">v1.2</span>
+                <span class="text-xs text-gray-600">October 2024</span>
+                <span class="text-xs font-medium text-white ml-1">Deal Pipeline & Kanban</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Visual deal pipeline with drag-and-drop stages</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Kanban boards with custom columns, labels, and assignees</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Win/loss tracking on deals with reason tagging</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">List view for tasks — toggle between board and list</span></div>
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Workspace onboarding flow — new users get a guided setup</span></div>
+            </div>
+        </div>
+
+        <!-- v1.1 -->
+        <div class="rv ver-entry">
+            <div class="ver-dot minor"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-dark-600 text-gray-400 border border-dark-400">v1.1</span>
+                <span class="text-xs text-gray-600">September 2024</span>
+                <span class="text-xs font-medium text-white ml-1">Polish & Performance</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Dashboard analytics now update in real-time</span></div>
+                <div class="ch-item"><span class="cat-tag cat-impr">Improved</span><span class="text-gray-400">Task search is 5x faster with full-text indexing</span></div>
+                <div class="ch-item"><span class="cat-tag cat-fix">Fixed</span><span class="text-gray-400">Kanban card drag ghost rendering on Windows Chrome</span></div>
+                <div class="ch-item"><span class="cat-tag cat-fix">Fixed</span><span class="text-gray-400">Workspace invitation emails landing in spam — updated DKIM</span></div>
+                <div class="ch-item"><span class="cat-tag cat-fix">Fixed</span><span class="text-gray-400">Incorrect timezone on due dates for UTC+ users</span></div>
+            </div>
+        </div>
+
+        <!-- v1.0 -->
+        <div class="rv ver-entry">
+            <div class="ver-dot minor"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-dark-600 text-gray-400 border border-dark-400">v1.0</span>
+                <span class="text-xs text-gray-600">August 2024</span>
+                <span class="text-xs font-medium text-white ml-1">Initial Launch</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Workspace creation and team invitations</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Task management with boards, lists, and cards</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Contact profiles with notes and history</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Basic dashboard with task completion stats</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Role-based access — Admin, Member, Viewer</span></div>
+            </div>
+        </div>
+
+        <!-- v0.9 Beta -->
+        <div class="rv ver-entry">
+            <div class="ver-dot minor"></div>
+            <div class="mb-2 flex flex-wrap items-center gap-2">
+                <span class="ver-badge bg-dark-600 text-gray-400 border border-dark-400">v0.9</span>
+                <span class="text-xs text-gray-600">July 2024</span>
+                <span class="text-xs font-medium text-white ml-1">Private Beta</span>
+            </div>
+            <div class="space-y-1">
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Core app architecture and authentication</span></div>
+                <div class="ch-item"><span class="cat-tag cat-feat">Feature</span><span class="text-gray-400">Basic task CRUD and workspace management</span></div>
+                <div class="ch-item"><span class="cat-tag cat-break">Breaking</span><span class="text-gray-400">Initial schema — everything built from here</span></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+</div>
+
+<!-- ============================================ -->
+<!-- ===== ROADMAP ===== -->
+<!-- ============================================ -->
+<div class="tab-panel" id="panel-roadmap">
+<section class="py-8 pb-24">
+    <div class="max-w-6xl mx-auto px-6">
+
+        <div class="rv text-center mb-12">
+            <p class="text-gray-500 text-sm mb-2">What we're building next — updated in real time</p>
+            <p class="text-xs text-gray-600">Click the vote button on features you want most. It actually influences priority.</p>
+        </div>
+
+        <!-- In Progress -->
+        <div class="mb-14">
+            <div class="rv flex items-center gap-3 mb-6">
+                <span class="status-tag status-progress"><i class="fa-solid fa-spinner fa-spin text-[9px]"></i> In Progress</span>
+                <span class="text-xs text-gray-600">Currently being built</span>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv road-card">
+                    <span class="priority high">High</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-bell text-accent text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Notification Preferences</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Fine-grained notification controls. Choose which events trigger emails, in-app, or nothing. Mute specific projects.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>47</span></button>
+                </div>
+                <div class="rv d1 road-card">
+                    <span class="priority high">High</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-palette text-accent text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Dark/Light Theme Toggle</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">System-aware theme switching. Light mode for daylight workers, dark mode for night owls.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>38</span></button>
+                </div>
+                <div class="rv d2 road-card">
+                    <span class="priority high">High</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-mobile-screen text-accent text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Mobile-Optimized Views</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Not just responsive — views designed specifically for phone screens. Swipe-friendly boards, tap-friendly cards.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>52</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planned -->
+        <div class="mb-14">
+            <div class="rv flex items-center gap-3 mb-6">
+                <span class="status-tag status-planned"><i class="fa-solid fa-calendar text-[9px]"></i> Planned</span>
+                <span class="text-xs text-gray-600">Next in the queue</span>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv road-card">
+                    <span class="priority high">High</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-chart-gantt text-[#00B8D4] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Gantt / Timeline View</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Visual timeline for project planning. See task dependencies, overlapping deadlines, and project duration at a glance.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>61</span></button>
+                </div>
+                <div class="rv d1 road-card">
+                    <span class="priority med">Medium</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-robot text-[#00B8D4] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Workflow Automations</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">"When task moves to Done, auto-create invoice." "When deal reaches Won, send notification." Simple if-then rules.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>44</span></button>
+                </div>
+                <div class="rv d2 road-card">
+                    <span class="priority med">Medium</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-brands fa-slack text-[#00B8D4] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Slack Integration</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Get WorkGrid notifications in Slack. Create tasks from Slack messages. Two-way sync for teams that live in Slack.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>39</span></button>
+                </div>
+                <div class="rv d3 road-card">
+                    <span class="priority med">Medium</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-stopwatch text-[#00B8D4] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Time Tracking</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Track time spent on tasks. Manual or timer-based. Reports by project, client, or team member. Link hours to invoices.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>33</span></button>
+                </div>
+                <div class="rv d4 road-card">
+                    <span class="priority med">Medium</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-envelope text-[#00B8D4] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Gmail Integration</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Sync emails to contact profiles. Create tasks from emails. See communication history without switching tabs.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>28</span></button>
+                </div>
+                <div class="rv d5 road-card">
+                    <span class="priority low">Low</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-file-import text-[#00B8D4] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">CSV / Data Import</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Import tasks, contacts, and deals from CSV. Migration wizard for switching from Trello, Monday, or HubSpot.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>22</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Considering -->
+        <div class="mb-8">
+            <div class="rv flex items-center gap-3 mb-6">
+                <span class="status-tag status-consider"><i class="fa-solid fa-lightbulb text-[9px]"></i> Considering</span>
+                <span class="text-xs text-gray-600">On the long-term radar — vote to move it up</span>
+            </div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="rv road-card">
+                    <span class="priority low">Low</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-comments text-[#A78BFA] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Built-in Chat</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">Thread-based chat attached to tasks and deals. Reduces need for Slack. Maybe. Still deciding if this is scope creep.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>19</span></button>
+                </div>
+                <div class="rv d1 road-card">
+                    <span class="priority low">Low</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-language text-[#A78BFA] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Multi-Language Support</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">WorkGrid in Spanish, French, German, Portuguese. Large engineering effort but high demand from non-English teams.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>15</span></button>
+                </div>
+                <div class="rv d2 road-card">
+                    <span class="priority low">Low</span>
+                    <div class="flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-mobile text-[#A78BFA] text-sm"></i>
+                        <h4 class="font-display font-semibold text-white text-sm">Native Mobile App</h4>
+                    </div>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-4">React Native apps for iOS and Android. Bigger undertaking — will happen after mobile web is solid.</p>
+                    <button class="vote-btn" onclick="vote(this)"><i class="fa-solid fa-arrow-up text-[9px]"></i> <span>41</span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How we decide -->
+        <div class="rv mt-12 p-6 rounded-2xl bg-dark-800 border border-dark-400">
+            <h3 class="font-display font-semibold text-white mb-3">How we decide what to build</h3>
+            <div class="space-y-3 text-sm text-gray-400 leading-relaxed">
+                <p><span class="text-accent font-semibold">1. User votes.</span> The vote counts on this page are real. Features with more votes get prioritized. This isn't performative — it's how I actually plan sprints.</p>
+                <p><span class="text-accent font-semibold">2. Core completeness.</span> I prioritize finishing existing modules over starting new ones. Half-built features help nobody.</p>
+                <p><span class="text-accent font-semibold">3. My own use.</span> I use WorkGrid daily. If something annoys me, I fix it. Dogfooding catches issues feedback can't.</p>
+                <p><span class="text-accent font-semibold">4. Effort vs. impact.</span> A feature that takes 2 days and helps 80% of users ships before a feature that takes 2 weeks and helps 10%.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+</div>
+
+<!-- ===== CTA ===== -->
+<section class="relative py-20 overflow-hidden">
+    <div class="glow-orb" style="width:400px;height:400px;background:rgba(0,230,138,0.04);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="max-w-3xl mx-auto px-6 text-center relative z-10">
+        <h2 class="rv font-display text-2xl sm:text-3xl font-bold text-white mb-4">Want to shape what gets built next?</h2>
+        <p class="rv d1 text-gray-400 mb-8">Start using WorkGrid and tell me what's missing. Your feedback literally changes the roadmap.</p>
+        <div class="rv d2 flex flex-wrap gap-4 justify-center">
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp">Start Free & Shape the Roadmap <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="border-t border-dark-400 py-14 bg-dark-950">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
+            <div class="lg:col-span-2">
+                <a href="index.html" class="flex items-center gap-2.5 mb-4">
+                    <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
+                    <span class="font-display font-bold text-lg text-white tracking-tight">WorkGrid</span>
+                </a>
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xs mb-5">The all-in-one workspace that combines tasks, CRM, invoicing, and HR.</p>
+                <div class="flex gap-3">
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4><ul class="space-y-2.5"><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li><li><a href="contact.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li></ul></div>
+        </div>
+        <div class="border-t border-dark-400 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-600">2026 WorkGrid. All rights reserved.</p>
+            <p class="text-xs text-gray-600">Built with frustration and caffeine.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{nav.classList.toggle('nav-scrolled',scrollY>40);});
+const mm=document.getElementById('mobMenu');
+document.getElementById('mobBtn').onclick=()=>mm.classList.add('open');
+document.getElementById('mobClose').onclick=()=>mm.classList.remove('open');
+document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('open'));
+const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+
+// Tab 切换
+function showTab(id){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+id).classList.add('active');
+    document.getElementById('btn-'+id).classList.add('active');
+    // 重新触发动画
+    document.getElementById('panel-'+id).querySelectorAll('.rv').forEach(el=>{el.classList.remove('on');ro.observe(el);});
+}
+
+// 投票
+function vote(btn){
+    const span=btn.querySelector('span');
+    if(btn.classList.contains('voted')){
+        btn.classList.remove('voted');
+        span.textContent=parseInt(span.textContent)-1;
+    }else{
+        btn.classList.add('voted');
+        span.textContent=parseInt(span.textContent)+1;
+    }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+</script>
+</body>
+</html>
