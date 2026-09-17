@@ -41,31 +41,31 @@
         .rv.on{opacity:1;transform:translate(0);}
         .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
 
-        /* 标签切换 */
+        /* Tab switching */
         .tab-btn{padding:10px 22px;border-radius:11px;font-size:14px;font-weight:600;border:1px solid var(--border);background:transparent;color:#6B7280;cursor:pointer;transition:all .25s;font-family:'Space Grotesk',sans-serif;}
         .tab-btn:hover{color:#E4E4E9;border-color:#3A3E50;}
         .tab-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,230,138,0.06);}
         .tab-panel{display:none;}.tab-panel.active{display:block;}
 
-        /* 版本条目 */
+        /* Version entries */
         .ver-entry{position:relative;padding-left:28px;padding-bottom:36px;border-left:2px solid var(--border);margin-left:8px;}
         .ver-entry:last-child{padding-bottom:0;border-left-color:transparent;}
         .ver-dot{position:absolute;left:-8px;top:0;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);z-index:1;}
         .ver-dot.minor{border-color:#3A3E50;}
         .ver-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
 
-        /* 类别标签 */
+        /* Category tags */
         .cat-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
         .cat-feat{background:rgba(0,230,138,0.1);color:var(--accent);}
         .cat-impr{background:rgba(0,184,212,0.1);color:#00B8D4;}
         .cat-fix{background:rgba(255,120,73,0.1);color:var(--warm);}
         .cat-break{background:rgba(255,82,82,0.1);color:#FF5252;}
 
-        /* 变更项 */
+        /* Change items */
         .ch-item{display:flex;align-items:start;gap:8px;padding:6px 0;font-size:13.5px;line-height:1.5;}
         .ch-item .cat-tag{flex-shrink:0;margin-top:2px;}
 
-        /* 路线图卡 */
+        /* Roadmap cards */
         .road-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all .3s;position:relative;}
         .road-card:hover{border-color:#3A3E50;transform:translateY(-2px);}
         .road-card .priority{position:absolute;top:16px;right:16px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;}
@@ -73,13 +73,13 @@
         .priority.med{background:rgba(0,184,212,0.1);color:#00B8D4;}
         .priority.low{background:rgba(255,255,255,0.04);color:#6B7280;}
 
-        /* 路线图状态标签 */
+        /* Roadmap status tags */
         .status-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;}
         .status-progress{background:rgba(0,230,138,0.1);color:var(--accent);}
         .status-planned{background:rgba(0,184,212,0.1);color:#00B8D4;}
         .status-consider{background:rgba(167,139,250,0.1);color:#A78BFA;}
 
-        /* 投票按钮 */
+        /* Vote buttons */
         .vote-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:transparent;color:#6B7280;font-size:11px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
         .vote-btn:hover{border-color:var(--accent);color:var(--accent);}
         .vote-btn.voted{border-color:var(--accent);color:var(--accent);background:rgba(0,230,138,0.06);}
@@ -98,8 +98,8 @@
 </head>
 <body>
 
-<!-- ===== 导航栏 ===== -->
-<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:transparent;border-bottom:1px solid transparent;">
+<!-- Navbar -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent border-b border-transparent">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="index.html" class="flex items-center gap-2.5">
             <div class="wg-logo" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span><span class="warm"></span><span class="on"></span><span class="on"></span><span class="off"></span><span class="off"></span></div>
@@ -116,7 +116,7 @@
         </div>
         <div class="hidden lg:flex items-center gap-3">
             <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2">Sign In</a>
-            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm" style="padding:8px 20px;">Sign Up Free</a>
+            <a href="https://taskflow-app-v1-six.vercel.app/" target="_blank" class="bp text-sm px-5 py-2">Sign Up Free</a>
         </div>
         <button id="mobBtn" class="lg:hidden text-white text-xl" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
     </div>
@@ -488,7 +488,7 @@
     </div>
 </section>
 
-<!-- ===== 页脚 ===== -->
+<!-- Footer -->
 <footer class="border-t border-dark-400 py-14 bg-dark-950">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-10">
@@ -504,7 +504,7 @@
                     <a href="#" class="w-8 h-8 rounded-lg bg-dark-600 flex items-center justify-center text-gray-500 hover:text-accent hover:bg-dark-500 transition-colors text-sm" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
             </div>
-            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="pricing.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
+            <div><h4 class="font-display font-semibold text-white text-sm mb-4">Product</h4><ul class="space-y-2.5"><li><a href="features.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Features</a></li><li><a href="index.html#pricing" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Pricing</a></li><li><a href="compare.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Compare</a></li><li><a href="changelog.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Changelog</a></li></ul></div>
             <div><h4 class="font-display font-semibold text-white text-sm mb-4">Solutions</h4><ul class="space-y-2.5"><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Freelancers</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Agencies</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Startups</a></li><li><a href="use-cases.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">For Remote Teams</a></li></ul></div>
             <div><h4 class="font-display font-semibold text-white text-sm mb-4">Company</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">About</a></li><li><a href="contact.html" class="text-sm text-gray-500 hover:text-gray-300 transition-colors">Contact</a></li></ul></div>
         </div>
@@ -525,17 +525,17 @@ document.querySelectorAll('.ml').forEach(l=>l.onclick=()=>mm.classList.remove('o
 const ro=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('on');});},{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
 document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
 
-// Tab 切换
+// Tab switching
 function showTab(id){
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('panel-'+id).classList.add('active');
     document.getElementById('btn-'+id).classList.add('active');
-    // 重新触发动画
+    // Re-trigger animation
     document.getElementById('panel-'+id).querySelectorAll('.rv').forEach(el=>{el.classList.remove('on');ro.observe(el);});
 }
 
-// 投票
+// Voting
 function vote(btn){
     const span=btn.querySelector('span');
     if(btn.classList.contains('voted')){
